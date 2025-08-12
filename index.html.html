@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Syndication + Appointment Generation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .presentation-container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 60px 50px;
+            min-height: 600px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .slide-subtitle {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .company-info {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .framework-item {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .framework-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .framework-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .framework-desc {
+            color: #5a6c7d;
+            line-height: 1.5;
+        }
+
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .metrics-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .metrics-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #5a6c7d;
+        }
+
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .process-step {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .arrow {
+            font-size: 20px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .tool-category {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .tool-category h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .tool-list {
+            color: #5a6c7d;
+            line-height: 1.8;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .pricing-column {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .pricing-column:hover {
+            transform: translateY(-5px);
+        }
+
+        .pricing-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .price-item {
+            margin: 15px 0;
+            color: #5a6c7d;
+        }
+
+        .price-amount {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .team-section {
+            margin-top: 30px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .team-roles, .incentives {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .role-item {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-props {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .value-prop {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .value-prop:hover {
+            transform: translateY(-5px);
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #5a67d8;
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+                min-height: 500px;
+            }
+            
+            .slide-title {
+                font-size: 2rem;
+            }
+            
+            .framework-grid,
+            .split-section,
+            .tools-grid,
+            .pricing-grid,
+            .team-grid,
+            .value-props {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .process-flow {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active">
+            <div class="slide-header">
+                <h1 class="slide-title">Content Syndication + Appointment Generation</h1>
+                <p class="slide-subtitle">Your Partner for B2B Demand Generation</p>
+            </div>
+            <div style="height: 200px; background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 40px 0;">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #667eea; margin-bottom: 15px;">🚀</div>
+                    <p style="color: #5a6c7d; font-size: 1.1rem;">Driving Growth Through Strategic B2B Demand Generation</p>
+                </div>
+            </div>
+            <div class="company-info">
+                <strong>Total SOP for Start Up</strong> | Pune, Maharashtra
+            </div>
+        </div>
+
+        <!-- Slide 2: Our Framework -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Our Strategic Framework</h1>
+            </div>
+            <div class="framework-grid">
+                <div class="framework-item">
+                    <div class="icon">📊</div>
+                    <h3 class="framework-title">Lead Acquisition</h3>
+                    <p class="framework-desc">Strategic identification and acquisition of high-quality leads from your ideal customer profile using advanced targeting and database tools.</p>
+                </div>
+                <div class="framework-item">
+                    <div class="icon">📢</div>
+                    <h3 class="framework-title">Content Syndication</h3>
+                    <p class="framework-desc">Multi-channel content distribution across email, LinkedIn, and publisher networks to maximize reach and engagement with your target audience.</p>
+                </div>
+                <div class="framework-item">
+                    <div class="icon">📅</div>
+                    <h3 class="framework-title">Appointment Generation</h3>
+                    <p class="framework-desc">Systematic qualification and nurturing process to convert marketing qualified leads into confirmed sales appointments with decision makers.</p>
+                </div>
+                <div class="framework-item">
+                    <div class="icon">📈</div>
+                    <h3 class="framework-title">Reporting</h3>
+                    <p class="framework-desc">Comprehensive performance tracking and transparent reporting with actionable insights to optimize campaigns and maximize ROI.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Key Modules & Metrics -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Content Syndication & Appointment Generation</h1>
+            </div>
+            <div class="split-section">
+                <div class="section">
+                    <h2 class="section-title">
+                        <span style="font-size: 24px;">📧</span>
+                        Content Syndication
+                    </h2>
+                    <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+                        <span style="background: #667eea; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">📧 Email</span>
+                        <span style="background: #0077b5; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">💼 LinkedIn</span>
+                        <span style="background: #28a745; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">🌐 Publisher Networks</span>
+                    </div>
+                    <p style="color: #5a6c7d; margin: 15px 0;"><strong>Goal:</strong> Drive MQLs from client's ICP</p>
+                    <ul class="metrics-list">
+                        <li><span style="color: #667eea;">📈</span> Open Rate</li>
+                        <li><span style="color: #667eea;">🎯</span> Click-Through Rate</li>
+                        <li><span style="color: #667eea;">📊</span> Lead Volume</li>
+                        <li><span style="color: #667eea;">💰</span> Cost per MQL</li>
+                    </ul>
+                </div>
+                <div class="section">
+                    <h2 class="section-title">
+                        <span style="font-size: 24px;">📞</span>
+                        Appointment Generation
+                    </h2>
+                    <div class="process-flow">
+                        <div class="process-step">Lead Capture</div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">Qualification</div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">Meeting</div>
+                    </div>
+                    <ul class="metrics-list" style="margin-top: 30px;">
+                        <li><span style="color: #667eea;">📅</span> Appointment Rate</li>
+                        <li><span style="color: #667eea;">✅</span> Show-up Rate</li>
+                        <li><span style="color: #667eea;">🎯</span> Conversion Rate</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Tools & Technology -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Our Technology Stack</h1>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-category">
+                    <h3>📧 Email Marketing</h3>
+                    <div class="tool-list">Apollo.io, Instantly.ai, Lemlist</div>
+                </div>
+                <div class="tool-category">
+                    <h3>📊 Database</h3>
+                    <div class="tool-list">ZoomInfo, Apollo.io, LeadIQ</div>
+                </div>
+                <div class="tool-category">
+                    <h3>📞 Calling</h3>
+                    <div class="tool-list">Aircall, CloudTalk, JustCall</div>
+                </div>
+                <div class="tool-category">
+                    <h3>🔧 Automation Tools</h3>
+                    <div class="tool-list">Warmbox, Expandi (LinkedIn automation)</div>
+                </div>
+                <div class="tool-category">
+                    <h3>📈 Project Management</h3>
+                    <div class="tool-list">Basecamp, ClickUp, Google Data Studio</div>
+                </div>
+                <div class="tool-category">
+                    <h3>🛡 Compliance & Security</h3>
+                    <div class="tool-list">GDPR Tools, Privacy Management, Data Protection</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Pricing & Investment -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Investment & Compliance</h1>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-column">
+                    <div class="pricing-header">Infrastructure & Tools</div>
+                    <div class="price-item">
+                        <div>Infrastructure</div>
+                        <div class="price-amount">₹15k-25k</div>
+                    </div>
+                    <div class="price-item">
+                        <div>SaaS Tools</div>
+                        <div class="price-amount">₹30k-50k/month</div>
+                    </div>
+                </div>
+                <div class="pricing-column">
+                    <div class="pricing-header">Team Costs</div>
+                    <div class="price-item">
+                        <div>SDRs</div>
+                        <div class="price-amount">₹40k-60k per SDR</div>
+                    </div>
+                    <div class="price-item">
+                        <div>Data Researchers</div>
+                        <div class="price-amount">₹25k-35k each</div>
+                    </div>
+                </div>
+                <div class="pricing-column">
+                    <div class="pricing-header">Compliance & Registration</div>
+                    <div class="price-item">
+                        <div>Pvt Ltd Registration</div>
+                        <div class="price-amount">₹8k-12k</div>
+                    </div>
+                    <div class="price-item">
+                        <div>GST Registration</div>
+                        <div class="price-amount">₹1k-2k</div>
+                    </div>
+                    <div class="price-item">
+                        <div>Data Compliance</div>
+                        <div class="price-amount">~₹15k</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Team & Compensation -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Our Team & Remuneration Structure</h1>
+            </div>
+            <div class="team-grid">
+                <div class="team-roles">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.3rem;">Team Roles & Salaries</h3>
+                    <div class="role-item">
+                        <span><strong>SDRs</strong></span>
+                        <span class="price-amount">₹35k-60k/month + bonus</span>
+                    </div>
+                    <div class="role-item">
+                        <span><strong>Data Researchers</strong></span>
+                        <span class="price-amount">₹20k-30k/month</span>
+                    </div>
+                    <div class="role-item">
+                        <span><strong>Campaign Manager</strong></span>
+                        <span class="price-amount">₹50k-80k/month</span>
+                    </div>
+                </div>
+                <div class="incentives">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.3rem;">Incentive Structure</h3>
+                    <div style="color: #5a6c7d; line-height: 1.8;">
+                        <div style="margin: 15px 0; padding: 10px; background: white; border-radius: 8px;">
+                            <strong>Commission:</strong> Incentive per qualified appointment
+                        </div>
+                        <div style="margin: 15px 0; padding: 10px; background: white; border-radius: 8px;">
+                            <strong>Quarterly Bonus:</strong> For exceeding targets
+                        </div>
+                        <div style="margin: 15px 0; padding: 10px; background: white; border-radius: 8px;">
+                            <strong>Revenue Share:</strong> 10-15% for freelancers
+                        </div>
