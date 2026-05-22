@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspector Interview &mdash; Building Software for Your Workflow</title>
+<meta name="description" content="A 60-question interview for an experienced oil drilling rig inspector. Designed for a 60-90 minute conversation or async fill-in.">
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #faf8f3;
+    --bg-elev: #ffffff;
+    --ink: #1a1a1a;
+    --ink-muted: #5a5a5a;
+    --ink-faint: #8a8a8a;
+    --rule: #e6e1d5;
+    --accent: #8a4a1f;
+    --accent-soft: #f3ead9;
+    --max-width: 720px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(250, 248, 243, 0.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .topbar-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .topbar-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .topbar-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    appearance: none;
+    border: 1px solid var(--rule);
+    background: var(--bg-elev);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .btn:hover {
+    border-color: var(--ink-faint);
+    background: #fff;
+  }
+
+  main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+
+  header.doc-header {
+    margin-bottom: 48px;
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+
+  h1 {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 21px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+    margin: 0;
+    font-weight: 400;
+  }
+
+  h2 {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 28px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin: 56px 0 8px;
+    color: var(--ink);
+    scroll-margin-top: 80px;
+  }
+
+  h2 .section-time {
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    margin-left: 10px;
+    vertical-align: middle;
+    letter-spacing: 0;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 32px 0 8px;
+    color: var(--ink);
+  }
+
+  p {
+    margin: 0 0 18px;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  a:hover { color: var(--ink); }
+
+  ul, ol {
+    margin: 0 0 24px;
+    padding-left: 24px;
+  }
+
+  li { margin-bottom: 8px; }
+
+  ul.questions {
+    list-style: none;
+    padding: 0;
+    counter-reset: q-counter var(--q-start, 0);
+    margin: 0 0 32px;
+  }
+
+  ul.questions > li {
+    counter-increment: q-counter;
+    position: relative;
+    padding: 18px 0 18px 56px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 0;
+  }
+
+  ul.questions > li:first-child {
+    border-top: 1px solid var(--rule);
+  }
+
+  ul.questions > li::before {
+    content: counter(q-counter);
+    position: absolute;
+    left: 0;
+    top: 18px;
+    width: 40px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+    padding-top: 3px;
+  }
+
+  .callout {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 24px 28px;
+    margin: 32px 0 40px;
+  }
+
+  .callout h2 {
+    margin-top: 0;
+    font-size: 20px;
+  }
+
+  .callout ol {
+    margin-bottom: 0;
+  }
+
+  .callout p:last-child { margin-bottom: 0; }
+
+  .section-intro {
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 48px 0;
+  }
+
+  .meta-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+  }
+
+  .meta-list li {
+    padding-left: 22px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .meta-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--ink-faint);
+  }
+
+  .closing {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-muted);
+  }
+
+  .closing p:last-child { margin-bottom: 0; }
+
+  footer.doc-footer {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+    color: var(--ink-faint);
+    font-size: 13px;
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    main { padding: 40px 20px 64px; }
+    h1 { font-size: 32px; }
+    .lede { font-size: 18px; }
+    h2 { font-size: 23px; }
+    h2 .section-time { display: block; margin-left: 0; margin-top: 4px; }
+    .topbar-inner { padding: 12px 20px; }
+    .callout { padding: 20px 22px; }
+    ul.questions > li { padding-left: 44px; }
+    ul.questions > li::before { width: 32px; }
+  }
+
+  @media print {
+    .topbar, .doc-footer { display: none; }
+    body { background: #fff; color: #000; font-size: 11pt; line-height: 1.45; }
+    main { padding: 0; max-width: none; }
+    h1 { font-size: 24pt; }
+    .lede { font-size: 14pt; }
+    h2 { font-size: 16pt; margin-top: 28pt; page-break-after: avoid; }
+    h2 .section-time { display: none; }
+    .callout { background: #f5f5f5; border-left-color: #888; }
+    .callout h2 { color: #000; }
+    ul.questions > li { page-break-inside: avoid; }
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="topbar-title">Inspector Interview</span>
+    <div class="topbar-actions">
+      <button class="btn" onclick="window.print()" aria-label="Print or save as PDF">Print &middot; Save as PDF</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<header class="doc-header">
+  <p class="eyebrow">Discussion Guide</p>
+  <h1>Inspector Interview</h1>
+  <p class="lede">Building software for your workflow. A 60&ndash;90 minute conversation, or a written questionnaire &mdash; whichever suits you.</p>
+</header>
+
+<p>Thanks for the time.</p>
+
+<p>We're working on a tool to replace the pen, paper, photos, and Microsoft Word workflow that you (and inspectors like you) currently use to produce CEO-facing rig inspection reports. Rather than guess at what you actually do day-to-day, we'd rather build the product from the real shape of your work.</p>
+
+<p>This document is designed two ways:</p>
+
+<ul class="meta-list">
+  <li>A <strong>60&ndash;90 minute conversation</strong> &mdash; we'll walk through it together.</li>
+  <li>An <strong>async questionnaire</strong> &mdash; answer the ones that matter to you, skip the rest. Even ten thoughtful answers are more valuable than fifty quick ones.</li>
+</ul>
+
+<h3>A few ground rules</h3>
+
+<ul class="meta-list">
+  <li><strong>No wrong answers.</strong> "It depends" is a perfectly good answer.</li>
+  <li><strong>Specifics from your last few inspections beat generalisations.</strong> "On the <em>Atwood Beacon</em> in November we&hellip;" is gold.</li>
+  <li><strong>Skip anything you'd rather not answer</strong>, especially anything client-identifying.</li>
+  <li><strong>We will not share your answers</strong> outside our small build team, and any artifacts you share will be redacted before they enter any internal document.</li>
+  <li>After the conversation we'll send you a written summary of what we changed in the spec because of your input.</li>
+</ul>
+
+<div class="callout">
+  <h2>Our current thinking &mdash; please challenge it</h2>
+  <p>Before the questions, here's the hypothesis we're testing. If any of it is wrong, that's the most useful thing you can tell us.</p>
+  <ol>
+    <li>The biggest time costs in your week are the <strong>evening debrief</strong> (transferring photos, retyping notes, building defect&#8209;register entries in Word/Excel) and <strong>report writing</strong> (laying out photo plates, formatting tables, writing exec summary). Together: 20&ndash;40 hours per inspection.</li>
+    <li>The single biggest source of error is <strong>photo&#8209;to&#8209;finding linkage</strong> &mdash; knowing which photo on the camera roll belongs to which finding hours later.</li>
+    <li><strong>Severity often drifts</strong> between when you spot it in the field and when you write it up.</li>
+    <li>The <strong>CEO reads only the executive summary</strong> and maybe the top critical findings list.</li>
+    <li>You produce broadly three shapes of report: a short walkdown (~10&ndash;30 pp), a full audit (~100&ndash;300 pp), and a pre&#8209;purchase / due&#8209;diligence (~50&ndash;150 pp).</li>
+    <li>You'd rather have a tool that <strong>does fewer things really well</strong> than one that tries to be a generic checklist app.</li>
+  </ol>
+  <p>If any of these feel wrong, please push back early &mdash; we'd rather discover it now than build around a wrong premise.</p>
+</div>
+
+<h2 id="s1">Section 1 &mdash; Your background and current setup <span class="section-time">~5 min</span></h2>
+
+<ul class="questions" style="--q-start: 0;">
+  <li>How long have you been doing rig inspections, and what kinds of rigs are you on most (land, jackup, semisub, drillship, workover)?</li>
+  <li>Do you work solo, as part of a small firm, or as a contractor placed through a third&#8209;party house (Bureau Veritas / ModuSpec, Add Energy, ABL Group, OCS Group, RigCert, etc.)?</li>
+  <li>What's the rough mix of your engagements right now &mdash; operator&#8209;commissioned, drilling&#8209;contractor&#8209;commissioned, pre&#8209;purchase / due&#8209;diligence, recertification, other?</li>
+  <li>Roughly how many inspections do you complete in a typical month or year?</li>
+  <li>What's your day rate, or how do you bill? A rough range is fine.</li>
+  <li>What gear do you carry onto a rig today &mdash; phone model, tablet, laptop, camera, anything intrinsically safe, any test instruments you bring yourself (UT gauge, IR thermometer, multimeter)?</li>
+</ul>
+
+<h2 id="s2">Section 2 &mdash; Walk us through your last inspection <span class="section-time">~20 min</span></h2>
+
+<p class="section-intro">Pick whichever recent inspection you remember most clearly. The more concrete the details, the more we learn.</p>
+
+<ul class="questions" style="--q-start: 6;">
+  <li>Where was it (region, rig type), who was the client (operator / contractor / owner), how many days on board, how many days end&#8209;to&#8209;end including travel and reporting?</li>
+  <li>How did the <strong>scope</strong> get agreed before mobilisation &mdash; email, Word SOW, framework agreement? Did it change at any point?</li>
+  <li>What documents did you pull together in the <strong>desktop&#8209;review</strong> phase before going on board? Where did they live (OneDrive, email attachments, USB drive)? Roughly how long did that take?</li>
+  <li>What did <strong>Day 1 on the rig</strong> look like &mdash; induction, PTW, kick&#8209;off meeting? At what point in Day 1 did you start logging actual findings?</li>
+  <li>How did you split your time across disciplines (structure, mechanical, electrical, well control, safety) day by day?</li>
+  <li>Roughly <strong>how many findings</strong> did you raise in total, and <strong>how many photos</strong> were on your phone at the end of the last day?</li>
+  <li>Did anything in the rig schedule (BOP test timing, weather, SIMOPS, crew change) force you to reorder your work?</li>
+  <li>What did the <strong>exit meeting</strong> look like &mdash; who attended, how were any disputed findings handled, were any findings dispensed or downgraded under client pressure?</li>
+  <li>Anything unusual about that particular inspection that wouldn't be true for most others?</li>
+</ul>
+
+<h2 id="s3">Section 3 &mdash; The evening debrief and the report <span class="section-time">~20 min</span></h2>
+
+<p class="section-intro">This is where we suspect the biggest pain lives. Push back hard if we've got that wrong.</p>
+
+<ul class="questions" style="--q-start: 15;">
+  <li>After each day on the rig, what did you do in the evening before sleeping? Walk us through 19:00 to 23:00 on Day 3 of an average inspection.</li>
+  <li>How do you <strong>transfer photos off your phone</strong>? How do you rename and sort them &mdash; by day, by system, by finding?</li>
+  <li>How do you turn <strong>handwritten notes into findings</strong> &mdash; Word? Excel? Both? At what point do you type them up?</li>
+  <li>How do you decide <strong>severity</strong>? Do you set it in the moment, or revisit at the end of the day, or wait until report&#8209;writing?</li>
+  <li>After the on&#8209;rig week, <strong>how long until the report is delivered</strong>, and what does the report&#8209;writing schedule look like &mdash; full days, evenings around other work?</li>
+  <li>How do you actually <strong>build the report</strong>? Is there a master Word template you start from? How much do you copy or adapt from previous reports?</li>
+  <li>How do you <strong>lay out photo plates</strong> in Word? How do you annotate photos (arrows, circles, dimension lines)? What tool do you use for the annotation?</li>
+  <li>Do you have a <strong>peer reviewer</strong>, or does the report ship straight from you to the client?</li>
+  <li>How does the client take <strong>delivery</strong> &mdash; email PDF, USB drop&#8209;off, portal upload? Do they want an Excel defect register alongside the PDF? Do they want raw photos?</li>
+  <li>What's the <strong>longest</strong> part of report&#8209;writing? Where do you most often get stuck, bored, or have to redo work?</li>
+  <li>After delivery, how do you handle <strong>close&#8209;out</strong> &mdash; clients sending evidence that critical items have been fixed? Does the loop usually close, or do items drift?</li>
+</ul>
+
+<h2 id="s4">Section 4 &mdash; Specific tools and field reality <span class="section-time">~10 min</span></h2>
+
+<ul class="questions" style="--q-start: 26;">
+  <li>What's your <strong>daily phone</strong> right now? Has any operator ever asked you not to bring it onto the rig floor or into Zone 1?</li>
+  <li>Have you ever used an <strong>intrinsically&#8209;safe phone or tablet</strong> (Aegex, Getac F110&#8209;EX / ZX10&#8209;Ex, i.safe MOBILE, ecom Tab&#8209;Ex)? If so, what was it like to live with for a week?</li>
+  <li>What's <strong>connectivity</strong> like on a typical rig you visit &mdash; VSAT, 4G hotspot at the company&#8209;man's trailer, Starlink Maritime? Are you uploading anything from on board, or saving it all for after?</li>
+  <li>Do you wear <strong>gloves</strong> while logging findings on a phone or tablet? Which gloves? Do they actually work with the screen?</li>
+  <li>Have you ever <strong>lost work</strong> because of a dead battery, a dropped phone, a lost notebook, an OneDrive sync failure? What happened?</li>
+  <li>Do you use <strong>voice dictation</strong> today, or have you tried? At what noise level does it become useless?</li>
+  <li>What software (apps, Word, Excel, Adobe Acrobat, OneDrive, Dropbox) do you actually use during an inspection? Rough list.</li>
+</ul>
+
+<h2 id="s5">Section 5 &mdash; Severity, vocabulary, standards <span class="section-time">~10 min</span></h2>
+
+<ul class="questions" style="--q-start: 33;">
+  <li>Which <strong>severity scheme</strong> do you use most often &mdash; Critical / Major / Minor, A / B / C, 1&ndash;5 condition rating, 5&times;5 risk matrix? Does it vary by client?</li>
+  <li>Which <strong>standards</strong> do you cite most often in reports &mdash; API RP 4G, RP 8B, Std 53, Spec 16A, IADC checklist, OSHA 1910, BSEE 30 CFR 250, NORSOK, DNV, ABS, client&#8209;specific specs?</li>
+  <li>Are there clauses you <strong>wish you cited more often</strong> but skip because it's tedious to look up?</li>
+  <li>Do you keep a <strong>personal library of recommendation phrasings</strong> you re&#8209;use? Where does it live &mdash; a Word doc, scattered across previous reports, in your head?</li>
+  <li>What <strong>component&#8209;naming conventions</strong> do you stick to? Any standard component names you wish were just always pre&#8209;populated when you start an inspection (mast pins, BOP rams, crown sheaves, etc.)?</li>
+  <li>How do you handle <strong>NDT data</strong> today &mdash; your own measurements, or someone else's? Do they hand you a PDF you embed in the report, or raw readings you have to format?</li>
+  <li>What inspection <strong>categories</strong> (API RP 4G Cat III/IV, API RP 8B Cat I&ndash;IV) do you most often scope into?</li>
+</ul>
+
+<h2 id="s6">Section 6 &mdash; Mistakes, disputes, defensibility <span class="section-time">~10 min</span></h2>
+
+<ul class="questions" style="--q-start: 40;">
+  <li>What's the <strong>worst report mistake</strong> you've ever made or seen &mdash; wrong photo on a finding, severity downgrade you regretted, missing critical item, stale text from a previous report? What was the root cause?</li>
+  <li>Have you ever had a finding <strong>disputed by a client</strong> and overturned at exit meeting? How was that resolved? Was there a written dispensation?</li>
+  <li>Have you ever had a finding <strong>come back to bite you</strong> months later &mdash; regulator finding, incident on that rig, insurance dispute?</li>
+  <li>What's the one thing that, <strong>if it failed in the field</strong>, would make you abandon a software tool and reach for your notebook?</li>
+  <li>What do you wish a report had that you currently can't put in it because it's too tedious &mdash; historical comparison with last inspection, capex backlog roll&#8209;up, regulatory clause map, something else?</li>
+</ul>
+
+<h2 id="s7">Section 7 &mdash; Money, adoption, your network <span class="section-time">~10 min</span></h2>
+
+<ul class="questions" style="--q-start: 45;">
+  <li>What <strong>software do you currently pay for</strong> out of pocket (Adobe Acrobat Pro, Microsoft 365, OneDrive, anything else)? Rough monthly cost?</li>
+  <li>Have you ever paid for an <strong>inspection tool</strong> &mdash; SafetyCulture / iAuditor, FAT FINGER, BasinCheck, Floodlight, ModuSpec Argus, GoCanvas, Fulcrum, anything else? What did you think? Why did you stop, if you did?</li>
+  <li>If a tool genuinely saved you <strong>20&ndash;40 hours per inspection</strong> and produced a PDF at least as good as your current Word output, what would you pay per month for it? At what price would you start hesitating?</li>
+  <li>Would you rather pay <strong>per inspection or flat monthly subscription</strong>? Annual or month&#8209;to&#8209;month?</li>
+  <li>How many <strong>other inspectors</strong> are in your immediate network who might also use a tool like this? Any specific people you'd recommend we speak to?</li>
+  <li>Would you be willing to <strong>dogfood the first version</strong> on one of your real inspections &mdash; paper still in your bag as a safety net?</li>
+  <li>Could we <strong>shadow one of your inspections</strong> in the next 3&ndash;6 months, even remotely (you carry a second device, we watch over your shoulder)?</li>
+</ul>
+
+<h2 id="s8">Section 8 &mdash; Show and tell <span class="section-time">5 min, ongoing</span></h2>
+
+<p class="section-intro">If you're willing, the single most valuable thing you can share is real artifacts. Nothing needs to leave our build team. We will redact any client&#8209;identifying details before anything enters an internal document.</p>
+
+<ul class="questions" style="--q-start: 52;">
+  <li><strong>A recent report (PDF)</strong> &mdash; even with all names and logos blacked out, the structure, length, and language tell us a lot.</li>
+  <li><strong>Your current Word template</strong> &mdash; the bones we'd be matching for visual parity in our PDF render.</li>
+  <li><strong>Your personal snippets file</strong>, if you have one, for recommendation phrasings.</li>
+  <li><strong>A screenshot of your folder structure</strong> on OneDrive / laptop / phone for a single inspection &mdash; how you organise photos and notes today.</li>
+  <li><strong>The format of an Excel defect register</strong> a client has asked you to deliver &mdash; column headers and one or two example rows is plenty.</li>
+  <li><strong>A copy of an inspection SOW</strong> you've signed (redacted), so we can understand how scope is framed.</li>
+</ul>
+
+<h2 id="closing">Closing</h2>
+
+<ul class="questions" style="--q-start: 58;">
+  <li>What did we <strong>not ask</strong> that we should have?</li>
+  <li><strong>If we built only one thing</strong>, what's the single feature that would make you adopt this tool on your next inspection?</li>
+</ul>
+
+<div class="closing">
+  <p>Thanks again. We'll send a written summary of what we change in the spec because of this conversation. If you have follow&#8209;up thoughts after the call, even days later, send them anytime &mdash; they're equally welcome.</p>
+</div>
+
+</main>
+
+<footer class="doc-footer">
+  <p>Inspector Interview &middot; v1 &middot; Shared in confidence.</p>
+</footer>
+
+</body>
+</html>
