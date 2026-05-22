@@ -14,8 +14,13 @@
     --ink-muted: #5a5a5a;
     --ink-faint: #8a8a8a;
     --rule: #e6e1d5;
+    --rule-strong: #d4cdba;
     --accent: #8a4a1f;
     --accent-soft: #f3ead9;
+    --chip-bg: #ffffff;
+    --chip-bg-hover: #f5f0e2;
+    --chip-bg-active: #1a1a1a;
+    --chip-ink-active: #faf8f3;
     --max-width: 720px;
   }
 
@@ -25,7 +30,7 @@
 
   body {
     margin: 0;
-    padding: 0;
+    padding: 0 0 120px 0;
     background: var(--bg);
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -62,6 +67,17 @@
     letter-spacing: 0.02em;
   }
 
+  .save-indicator {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .save-indicator.flash {
+    color: var(--accent);
+    transition: color 0.2s ease;
+  }
+
   .topbar-actions {
     display: flex;
     gap: 8px;
@@ -69,7 +85,7 @@
 
   .btn {
     appearance: none;
-    border: 1px solid var(--rule);
+    border: 1px solid var(--rule-strong);
     background: var(--bg-elev);
     color: var(--ink);
     font: inherit;
@@ -86,10 +102,32 @@
     background: #fff;
   }
 
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  .btn-primary:hover {
+    background: #000;
+    border-color: #000;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ink-muted);
+  }
+
+  .btn-ghost:hover {
+    color: var(--ink);
+    background: var(--accent-soft);
+  }
+
   main {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 56px 24px 96px;
+    padding: 56px 24px 64px;
   }
 
   header.doc-header {
@@ -173,39 +211,151 @@
 
   li { margin-bottom: 8px; }
 
-  ul.questions {
+  .meta-list {
     list-style: none;
     padding: 0;
-    counter-reset: q-counter var(--q-start, 0);
-    margin: 0 0 32px;
+    margin: 0 0 24px;
   }
 
-  ul.questions > li {
-    counter-increment: q-counter;
+  .meta-list li {
+    padding-left: 22px;
     position: relative;
-    padding: 18px 0 18px 56px;
-    border-bottom: 1px solid var(--rule);
-    margin-bottom: 0;
+    margin-bottom: 8px;
   }
 
-  ul.questions > li:first-child {
-    border-top: 1px solid var(--rule);
-  }
-
-  ul.questions > li::before {
-    content: counter(q-counter);
+  .meta-list li::before {
+    content: "—";
     position: absolute;
     left: 0;
-    top: 18px;
-    width: 40px;
-    text-align: right;
+    color: var(--ink-faint);
+  }
+
+  /* Question blocks */
+  .question {
+    border-top: 1px solid var(--rule);
+    padding: 24px 0;
+  }
+
+  .question:last-of-type {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .q-prompt {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .q-num {
+    flex: 0 0 32px;
     font-size: 13px;
     font-weight: 600;
     color: var(--ink-faint);
     letter-spacing: 0.02em;
-    padding-top: 3px;
+    padding-top: 4px;
+    text-align: right;
+    user-select: none;
   }
 
+  .q-text {
+    flex: 1;
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .q-body {
+    padding-left: 46px;
+  }
+
+  /* Chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--rule-strong);
+    background: var(--chip-bg);
+    color: var(--ink);
+    border-radius: 999px;
+    font-size: 13.5px;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    user-select: none;
+  }
+
+  .chip:hover {
+    background: var(--chip-bg-hover);
+    border-color: var(--ink-faint);
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+  }
+
+  .chip input:checked + span {
+    /* inner span handled by parent state */
+  }
+
+  .chip:has(input:checked) {
+    background: var(--chip-bg-active);
+    color: var(--chip-ink-active);
+    border-color: var(--chip-bg-active);
+  }
+
+  .chip:has(input:checked):hover {
+    background: #000;
+  }
+
+  .chips-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    margin-top: 4px;
+  }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px 14px;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-elev);
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.55;
+    border-radius: 8px;
+    resize: vertical;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--ink);
+    background: #fff;
+  }
+
+  textarea::placeholder {
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  /* Callout */
   .callout {
     background: var(--accent-soft);
     border-left: 3px solid var(--accent);
@@ -231,31 +381,7 @@
     font-style: italic;
   }
 
-  hr {
-    border: 0;
-    border-top: 1px solid var(--rule);
-    margin: 48px 0;
-  }
-
-  .meta-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 24px;
-  }
-
-  .meta-list li {
-    padding-left: 22px;
-    position: relative;
-    margin-bottom: 8px;
-  }
-
-  .meta-list li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-    color: var(--ink-faint);
-  }
-
+  /* Closing */
   .closing {
     margin-top: 64px;
     padding-top: 32px;
@@ -265,40 +391,149 @@
 
   .closing p:last-child { margin-bottom: 0; }
 
-  footer.doc-footer {
+  /* Sticky action bar */
+  .actionbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+    background: rgba(250, 248, 243, 0.95);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    border-top: 1px solid var(--rule);
+    padding: 12px 0;
+  }
+
+  .actionbar-inner {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 32px 24px 64px;
-    color: var(--ink-faint);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 13px;
-    border-top: 1px solid var(--rule);
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
   }
 
-  @media (max-width: 600px) {
-    body { font-size: 16px; }
-    main { padding: 40px 20px 64px; }
-    h1 { font-size: 32px; }
-    .lede { font-size: 18px; }
-    h2 { font-size: 23px; }
-    h2 .section-time { display: block; margin-left: 0; margin-top: 4px; }
-    .topbar-inner { padding: 12px 20px; }
-    .callout { padding: 20px 22px; }
-    ul.questions > li { padding-left: 44px; }
-    ul.questions > li::before { width: 32px; }
+  .progress-bar {
+    width: 80px;
+    height: 4px;
+    background: var(--rule);
+    border-radius: 999px;
+    overflow: hidden;
   }
 
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .actionbar-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 26, 26, 0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg-elev);
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .modal h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+
+  .modal p {
+    color: var(--ink-muted);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  /* Print styles */
   @media print {
-    .topbar, .doc-footer { display: none; }
-    body { background: #fff; color: #000; font-size: 11pt; line-height: 1.45; }
+    .topbar, .doc-footer, .actionbar, .modal-backdrop { display: none !important; }
+    body { background: #fff; color: #000; font-size: 11pt; line-height: 1.4; padding-bottom: 0; }
     main { padding: 0; max-width: none; }
-    h1 { font-size: 24pt; }
-    .lede { font-size: 14pt; }
-    h2 { font-size: 16pt; margin-top: 28pt; page-break-after: avoid; }
+    h1 { font-size: 22pt; }
+    .lede { font-size: 13pt; }
+    h2 { font-size: 14pt; margin-top: 24pt; page-break-after: avoid; }
     h2 .section-time { display: none; }
     .callout { background: #f5f5f5; border-left-color: #888; }
     .callout h2 { color: #000; }
-    ul.questions > li { page-break-inside: avoid; }
+    .question { page-break-inside: avoid; padding: 14px 0; }
+    .chip { border: 1px solid #999; padding: 2px 8px; font-size: 9.5pt; }
+    .chip:has(input:checked) { background: #000; color: #fff; }
+    textarea {
+      min-height: 60px;
+      border: 1px solid #999;
+      background: #fff;
+      font-size: 10.5pt;
+    }
+    textarea:empty::before {
+      content: "";
+      display: block;
+      height: 80px;
+    }
     a { color: #000; text-decoration: none; }
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; padding-bottom: 110px; }
+    main { padding: 40px 18px 48px; }
+    h1 { font-size: 30px; }
+    .lede { font-size: 17px; }
+    h2 { font-size: 22px; }
+    h2 .section-time { display: block; margin-left: 0; margin-top: 4px; }
+    .topbar-inner { padding: 12px 18px; flex-wrap: wrap; }
+    .topbar-actions { width: 100%; justify-content: space-between; margin-top: 4px; }
+    .topbar-actions .btn { flex: 1; text-align: center; }
+    .save-indicator { display: none; }
+    .callout { padding: 20px 22px; }
+    .q-prompt { gap: 10px; }
+    .q-num { flex-basis: 24px; font-size: 12px; }
+    .q-body { padding-left: 34px; }
+    .actionbar-inner { padding: 0 16px; flex-wrap: wrap; gap: 10px; }
+    .progress { order: 2; width: 100%; justify-content: center; }
+    .actionbar-actions { order: 1; width: 100%; justify-content: stretch; }
+    .actionbar-actions .btn { flex: 1; text-align: center; }
   }
 </style>
 </head>
@@ -307,8 +542,9 @@
 <div class="topbar">
   <div class="topbar-inner">
     <span class="topbar-title">Inspector Interview</span>
+    <span class="save-indicator" id="saveIndicator">Your answers save automatically</span>
     <div class="topbar-actions">
-      <button class="btn" onclick="window.print()" aria-label="Print or save as PDF">Print &middot; Save as PDF</button>
+      <button class="btn" onclick="window.print()" aria-label="Print or save as PDF">Print</button>
     </div>
   </div>
 </div>
@@ -316,166 +552,1492 @@
 <main>
 
 <header class="doc-header">
-  <p class="eyebrow">Discussion Guide</p>
+  <p class="eyebrow">Discussion Guide &middot; Auto-saves as you type</p>
   <h1>Inspector Interview</h1>
-  <p class="lede">Building software for your workflow. A 60&ndash;90 minute conversation, or a written questionnaire &mdash; whichever suits you.</p>
+  <p class="lede">Building software for your workflow. Answer inline, skip what you don't want, send it back when you're done.</p>
 </header>
 
 <p>Thanks for the time.</p>
 
-<p>We're working on a tool to replace the pen, paper, photos, and Microsoft Word workflow that you (and inspectors like you) currently use to produce CEO-facing rig inspection reports. Rather than guess at what you actually do day-to-day, we'd rather build the product from the real shape of your work.</p>
+<p>We're working on a tool to replace the pen, paper, photos, and Microsoft Word workflow that you (and inspectors like you) currently use to produce CEO-facing rig inspection reports. Rather than guess at what you do day-to-day, we'd rather build the product from the real shape of your work.</p>
 
-<p>This document is designed two ways:</p>
-
-<ul class="meta-list">
-  <li>A <strong>60&ndash;90 minute conversation</strong> &mdash; we'll walk through it together.</li>
-  <li>An <strong>async questionnaire</strong> &mdash; answer the ones that matter to you, skip the rest. Even ten thoughtful answers are more valuable than fifty quick ones.</li>
-</ul>
+<p>You can fill this in directly in your browser &mdash; <strong>your answers auto-save in this device's storage</strong>, so you can pause and come back. When you're done, hit <strong>Download</strong> or <strong>Email back</strong> at the bottom.</p>
 
 <h3>A few ground rules</h3>
 
 <ul class="meta-list">
   <li><strong>No wrong answers.</strong> "It depends" is a perfectly good answer.</li>
-  <li><strong>Specifics from your last few inspections beat generalisations.</strong> "On the <em>Atwood Beacon</em> in November we&hellip;" is gold.</li>
+  <li><strong>Specifics from your last few inspections beat generalisations.</strong></li>
   <li><strong>Skip anything you'd rather not answer</strong>, especially anything client-identifying.</li>
-  <li><strong>We will not share your answers</strong> outside our small build team, and any artifacts you share will be redacted before they enter any internal document.</li>
-  <li>After the conversation we'll send you a written summary of what we changed in the spec because of your input.</li>
+  <li><strong>We will not share your answers</strong> outside our small build team.</li>
+  <li>Pick a chip to answer fast; add detail in the text box if you want. Either is fine.</li>
 </ul>
 
 <div class="callout">
   <h2>Our current thinking &mdash; please challenge it</h2>
   <p>Before the questions, here's the hypothesis we're testing. If any of it is wrong, that's the most useful thing you can tell us.</p>
   <ol>
-    <li>The biggest time costs in your week are the <strong>evening debrief</strong> (transferring photos, retyping notes, building defect&#8209;register entries in Word/Excel) and <strong>report writing</strong> (laying out photo plates, formatting tables, writing exec summary). Together: 20&ndash;40 hours per inspection.</li>
-    <li>The single biggest source of error is <strong>photo&#8209;to&#8209;finding linkage</strong> &mdash; knowing which photo on the camera roll belongs to which finding hours later.</li>
+    <li>The biggest time costs in your week are the <strong>evening debrief</strong> and <strong>report writing</strong>. Together: 20&ndash;40 hours per inspection.</li>
+    <li>The single biggest source of error is <strong>photo&#8209;to&#8209;finding linkage</strong>.</li>
     <li><strong>Severity often drifts</strong> between when you spot it in the field and when you write it up.</li>
     <li>The <strong>CEO reads only the executive summary</strong> and maybe the top critical findings list.</li>
-    <li>You produce broadly three shapes of report: a short walkdown (~10&ndash;30 pp), a full audit (~100&ndash;300 pp), and a pre&#8209;purchase / due&#8209;diligence (~50&ndash;150 pp).</li>
+    <li>You produce broadly three shapes of report: walkdown (~10&ndash;30 pp), full audit (~100&ndash;300 pp), pre&#8209;purchase / due&#8209;diligence (~50&ndash;150 pp).</li>
     <li>You'd rather have a tool that <strong>does fewer things really well</strong> than one that tries to be a generic checklist app.</li>
   </ol>
-  <p>If any of these feel wrong, please push back early &mdash; we'd rather discover it now than build around a wrong premise.</p>
 </div>
+
+<form id="interviewForm" autocomplete="off">
 
 <h2 id="s1">Section 1 &mdash; Your background and current setup <span class="section-time">~5 min</span></h2>
 
-<ul class="questions" style="--q-start: 0;">
-  <li>How long have you been doing rig inspections, and what kinds of rigs are you on most (land, jackup, semisub, drillship, workover)?</li>
-  <li>Do you work solo, as part of a small firm, or as a contractor placed through a third&#8209;party house (Bureau Veritas / ModuSpec, Add Energy, ABL Group, OCS Group, RigCert, etc.)?</li>
-  <li>What's the rough mix of your engagements right now &mdash; operator&#8209;commissioned, drilling&#8209;contractor&#8209;commissioned, pre&#8209;purchase / due&#8209;diligence, recertification, other?</li>
-  <li>Roughly how many inspections do you complete in a typical month or year?</li>
-  <li>What's your day rate, or how do you bill? A rough range is fine.</li>
-  <li>What gear do you carry onto a rig today &mdash; phone model, tablet, laptop, camera, anything intrinsically safe, any test instruments you bring yourself (UT gauge, IR thermometer, multimeter)?</li>
-</ul>
+<!-- Q1 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">1.</div>
+    <div class="q-text">How long have you been doing rig inspections, and what kinds of rigs are you on most?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Rig types (pick all that apply)</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q1" data-tag="Land"><span>Land</span></label>
+      <label class="chip"><input type="checkbox" data-q="q1" data-tag="Jackup"><span>Jackup</span></label>
+      <label class="chip"><input type="checkbox" data-q="q1" data-tag="Semisub"><span>Semisub</span></label>
+      <label class="chip"><input type="checkbox" data-q="q1" data-tag="Drillship"><span>Drillship</span></label>
+      <label class="chip"><input type="checkbox" data-q="q1" data-tag="Workover"><span>Workover</span></label>
+      <label class="chip"><input type="checkbox" data-q="q1" data-tag="Coiled tubing / snubbing"><span>CT / snubbing</span></label>
+    </div>
+    <textarea data-q="q1-text" placeholder="Years in the role, anything else worth saying"></textarea>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">2.</div>
+    <div class="q-text">Do you work solo, as part of a small firm, or as a contractor placed through a third-party house?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q2" data-q="q2" data-tag="Solo independent"><span>Solo independent</span></label>
+      <label class="chip"><input type="radio" name="q2" data-q="q2" data-tag="Small firm partner / employee"><span>Small firm</span></label>
+      <label class="chip"><input type="radio" name="q2" data-q="q2" data-tag="Placed through tier-1 house (BV, ModuSpec, ABL, etc.)"><span>Placed through tier-1 (BV / ModuSpec / ABL)</span></label>
+      <label class="chip"><input type="radio" name="q2" data-q="q2" data-tag="Operator in-house"><span>Operator in-house</span></label>
+      <label class="chip"><input type="radio" name="q2" data-q="q2" data-tag="Contractor in-house"><span>Drilling contractor in-house</span></label>
+    </div>
+    <textarea data-q="q2-text" placeholder="Which firm / firms if relevant"></textarea>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">3.</div>
+    <div class="q-text">Rough mix of engagements right now?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Pick all that apply</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="Operator condition / acceptance"><span>Operator condition / acceptance</span></label>
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="Drilling contractor self-assessment"><span>Contractor self-assessment</span></label>
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="Pre-purchase / due-diligence"><span>Pre-purchase / DD</span></label>
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="Recertification (5-year)"><span>Recertification</span></label>
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="New-build acceptance"><span>New-build acceptance</span></label>
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="Reactivation / lay-up exit"><span>Reactivation</span></label>
+      <label class="chip"><input type="checkbox" data-q="q3" data-tag="DROPS surveys"><span>DROPS</span></label>
+    </div>
+    <textarea data-q="q3-text" placeholder="Approximate split if you can; otherwise anything notable"></textarea>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">4.</div>
+    <div class="q-text">Roughly how many inspections per year?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q4" data-q="q4" data-tag="< 5 / year"><span>&lt; 5</span></label>
+      <label class="chip"><input type="radio" name="q4" data-q="q4" data-tag="5-10 / year"><span>5&ndash;10</span></label>
+      <label class="chip"><input type="radio" name="q4" data-q="q4" data-tag="10-20 / year"><span>10&ndash;20</span></label>
+      <label class="chip"><input type="radio" name="q4" data-q="q4" data-tag="20-40 / year"><span>20&ndash;40</span></label>
+      <label class="chip"><input type="radio" name="q4" data-q="q4" data-tag="40+ / year"><span>40+</span></label>
+    </div>
+    <textarea data-q="q4-text" placeholder="Any seasonal / regional pattern"></textarea>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">5.</div>
+    <div class="q-text">Day rate, or how do you bill?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="< $1,000 / day"><span>&lt; $1k/day</span></label>
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="$1,000-1,500 / day"><span>$1&ndash;1.5k</span></label>
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="$1,500-2,500 / day"><span>$1.5&ndash;2.5k</span></label>
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="$2,500-4,000 / day"><span>$2.5&ndash;4k</span></label>
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="$4,000+ / day"><span>$4k+</span></label>
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="Lump sum per inspection"><span>Lump sum / job</span></label>
+      <label class="chip"><input type="radio" name="q5" data-q="q5" data-tag="Prefer not to say"><span>Prefer not to say</span></label>
+    </div>
+    <textarea data-q="q5-text" placeholder="Any nuance on billing structure"></textarea>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">6.</div>
+    <div class="q-text">What gear do you carry onto a rig today?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Pick all that apply</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="iPhone"><span>iPhone</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Android phone"><span>Android phone</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Standalone camera"><span>Standalone camera</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Notebook / clipboard"><span>Notebook / clipboard</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Laptop"><span>Laptop</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Consumer tablet"><span>Consumer tablet</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="IS-rated phone / tablet"><span>IS-rated device</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="UT thickness gauge"><span>UT gauge</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="IR thermometer / camera"><span>IR thermometer</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Multimeter / megger"><span>Multimeter / megger</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="MPI yoke / consumables"><span>MPI yoke</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Calipers / micrometers"><span>Calipers</span></label>
+      <label class="chip"><input type="checkbox" data-q="q6" data-tag="Borescope"><span>Borescope</span></label>
+    </div>
+    <textarea data-q="q6-text" placeholder="Anything not in the chips — phone model, specific tools"></textarea>
+  </div>
+</div>
 
 <h2 id="s2">Section 2 &mdash; Walk us through your last inspection <span class="section-time">~20 min</span></h2>
 
-<p class="section-intro">Pick whichever recent inspection you remember most clearly. The more concrete the details, the more we learn.</p>
+<p class="section-intro">Pick whichever recent inspection you remember most clearly. Concrete details &gt; generalisations.</p>
 
-<ul class="questions" style="--q-start: 6;">
-  <li>Where was it (region, rig type), who was the client (operator / contractor / owner), how many days on board, how many days end&#8209;to&#8209;end including travel and reporting?</li>
-  <li>How did the <strong>scope</strong> get agreed before mobilisation &mdash; email, Word SOW, framework agreement? Did it change at any point?</li>
-  <li>What documents did you pull together in the <strong>desktop&#8209;review</strong> phase before going on board? Where did they live (OneDrive, email attachments, USB drive)? Roughly how long did that take?</li>
-  <li>What did <strong>Day 1 on the rig</strong> look like &mdash; induction, PTW, kick&#8209;off meeting? At what point in Day 1 did you start logging actual findings?</li>
-  <li>How did you split your time across disciplines (structure, mechanical, electrical, well control, safety) day by day?</li>
-  <li>Roughly <strong>how many findings</strong> did you raise in total, and <strong>how many photos</strong> were on your phone at the end of the last day?</li>
-  <li>Did anything in the rig schedule (BOP test timing, weather, SIMOPS, crew change) force you to reorder your work?</li>
-  <li>What did the <strong>exit meeting</strong> look like &mdash; who attended, how were any disputed findings handled, were any findings dispensed or downgraded under client pressure?</li>
-  <li>Anything unusual about that particular inspection that wouldn't be true for most others?</li>
-</ul>
+<!-- Q7 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">7.</div>
+    <div class="q-text">Where, what type, who was the client, how many days?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Rig type for that job</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q7type" data-q="q7type" data-tag="Land"><span>Land</span></label>
+      <label class="chip"><input type="radio" name="q7type" data-q="q7type" data-tag="Jackup"><span>Jackup</span></label>
+      <label class="chip"><input type="radio" name="q7type" data-q="q7type" data-tag="Semisub"><span>Semisub</span></label>
+      <label class="chip"><input type="radio" name="q7type" data-q="q7type" data-tag="Drillship"><span>Drillship</span></label>
+      <label class="chip"><input type="radio" name="q7type" data-q="q7type" data-tag="Workover"><span>Workover</span></label>
+    </div>
+    <div class="chips-label">Days on board</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q7days" data-q="q7days" data-tag="1-2 days"><span>1&ndash;2</span></label>
+      <label class="chip"><input type="radio" name="q7days" data-q="q7days" data-tag="3-5 days"><span>3&ndash;5</span></label>
+      <label class="chip"><input type="radio" name="q7days" data-q="q7days" data-tag="6-10 days"><span>6&ndash;10</span></label>
+      <label class="chip"><input type="radio" name="q7days" data-q="q7days" data-tag="10+ days"><span>10+</span></label>
+    </div>
+    <textarea data-q="q7-text" placeholder="Region (Permian / North Sea / Gulf / Middle East / etc.), client type, total days end-to-end including travel and reporting"></textarea>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">8.</div>
+    <div class="q-text">How did the scope get agreed?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Pick all that apply</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q8" data-tag="Email thread"><span>Email</span></label>
+      <label class="chip"><input type="checkbox" data-q="q8" data-tag="Word / PDF SOW signed"><span>Word/PDF SOW</span></label>
+      <label class="chip"><input type="checkbox" data-q="q8" data-tag="Framework / MSA"><span>Framework / MSA</span></label>
+      <label class="chip"><input type="checkbox" data-q="q8" data-tag="Verbal kickoff only"><span>Verbal only</span></label>
+      <label class="chip"><input type="checkbox" data-q="q8" data-tag="Client purchase order"><span>Client PO</span></label>
+    </div>
+    <textarea data-q="q8-text" placeholder="Did scope change in flight? Anything painful about getting it nailed down?"></textarea>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">9.</div>
+    <div class="q-text">Desktop-review phase before going on board — what did you gather, and how long?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Document sources</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q9src" data-tag="OneDrive / SharePoint"><span>OneDrive / SharePoint</span></label>
+      <label class="chip"><input type="checkbox" data-q="q9src" data-tag="Email attachments"><span>Email</span></label>
+      <label class="chip"><input type="checkbox" data-q="q9src" data-tag="USB drive on arrival"><span>USB on arrival</span></label>
+      <label class="chip"><input type="checkbox" data-q="q9src" data-tag="Client portal"><span>Client portal</span></label>
+      <label class="chip"><input type="checkbox" data-q="q9src" data-tag="Rig clerk handover"><span>Rig clerk on board</span></label>
+    </div>
+    <div class="chips-label">Roughly how long</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q9time" data-q="q9time" data-tag="< 2 hours"><span>&lt; 2h</span></label>
+      <label class="chip"><input type="radio" name="q9time" data-q="q9time" data-tag="Half a day"><span>~½ day</span></label>
+      <label class="chip"><input type="radio" name="q9time" data-q="q9time" data-tag="A full day"><span>1 day</span></label>
+      <label class="chip"><input type="radio" name="q9time" data-q="q9time" data-tag="Multiple days"><span>Multi-day</span></label>
+    </div>
+    <textarea data-q="q9-text" placeholder="Which documents really mattered? Which were impossible to get?"></textarea>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">10.</div>
+    <div class="q-text">What did Day 1 on the rig look like? When did you start logging findings?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q10-text" placeholder="Induction, PTW, kick-off, first walkdown… how the day flowed"></textarea>
+  </div>
+</div>
+
+<!-- Q11 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">11.</div>
+    <div class="q-text">How did you split time across disciplines, day by day?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q11-text" placeholder="e.g. Day 2 structure + drawworks, Day 3 top drive + mud, Day 4 BOP + well control, Day 5 electrical + safety"></textarea>
+  </div>
+</div>
+
+<!-- Q12 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">12.</div>
+    <div class="q-text">Roughly how many findings, and how many photos by the end?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Findings count</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q12f" data-q="q12f" data-tag="< 30 findings"><span>&lt; 30</span></label>
+      <label class="chip"><input type="radio" name="q12f" data-q="q12f" data-tag="30-60 findings"><span>30&ndash;60</span></label>
+      <label class="chip"><input type="radio" name="q12f" data-q="q12f" data-tag="60-120 findings"><span>60&ndash;120</span></label>
+      <label class="chip"><input type="radio" name="q12f" data-q="q12f" data-tag="120-250 findings"><span>120&ndash;250</span></label>
+      <label class="chip"><input type="radio" name="q12f" data-q="q12f" data-tag="250+ findings"><span>250+</span></label>
+    </div>
+    <div class="chips-label">Photos count</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q12p" data-q="q12p" data-tag="< 100 photos"><span>&lt; 100</span></label>
+      <label class="chip"><input type="radio" name="q12p" data-q="q12p" data-tag="100-300 photos"><span>100&ndash;300</span></label>
+      <label class="chip"><input type="radio" name="q12p" data-q="q12p" data-tag="300-600 photos"><span>300&ndash;600</span></label>
+      <label class="chip"><input type="radio" name="q12p" data-q="q12p" data-tag="600-1,000 photos"><span>600&ndash;1k</span></label>
+      <label class="chip"><input type="radio" name="q12p" data-q="q12p" data-tag="1,000+ photos"><span>1k+</span></label>
+    </div>
+    <textarea data-q="q12-text" placeholder="What proportion of photos actually made it into the report?"></textarea>
+  </div>
+</div>
+
+<!-- Q13 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">13.</div>
+    <div class="q-text">Did the rig schedule (BOP test, weather, SIMOPS, crew change) force you to reorder work?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q13" data-q="q13" data-tag="Yes, significantly"><span>Yes, significantly</span></label>
+      <label class="chip"><input type="radio" name="q13" data-q="q13" data-tag="Yes, a bit"><span>A bit</span></label>
+      <label class="chip"><input type="radio" name="q13" data-q="q13" data-tag="No, plan held"><span>No, plan held</span></label>
+    </div>
+    <textarea data-q="q13-text" placeholder="What forced the reshuffle?"></textarea>
+  </div>
+</div>
+
+<!-- Q14 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">14.</div>
+    <div class="q-text">Exit meeting — who attended, how were disputes handled?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Were any findings disputed or downgraded?</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q14d" data-q="q14d" data-tag="No disputes"><span>None</span></label>
+      <label class="chip"><input type="radio" name="q14d" data-q="q14d" data-tag="Minor disputes"><span>A couple</span></label>
+      <label class="chip"><input type="radio" name="q14d" data-q="q14d" data-tag="Major dispute / downgrade"><span>Major dispute</span></label>
+    </div>
+    <textarea data-q="q14-text" placeholder="Who attended, what got pushed back on, was anything dispensed?"></textarea>
+  </div>
+</div>
+
+<!-- Q15 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">15.</div>
+    <div class="q-text">Anything unusual about that particular inspection that wouldn't be true for most others?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q15-text" placeholder="Free text"></textarea>
+  </div>
+</div>
 
 <h2 id="s3">Section 3 &mdash; The evening debrief and the report <span class="section-time">~20 min</span></h2>
 
-<p class="section-intro">This is where we suspect the biggest pain lives. Push back hard if we've got that wrong.</p>
+<p class="section-intro">This is where we suspect the biggest pain lives. Push back if we've got that wrong.</p>
 
-<ul class="questions" style="--q-start: 15;">
-  <li>After each day on the rig, what did you do in the evening before sleeping? Walk us through 19:00 to 23:00 on Day 3 of an average inspection.</li>
-  <li>How do you <strong>transfer photos off your phone</strong>? How do you rename and sort them &mdash; by day, by system, by finding?</li>
-  <li>How do you turn <strong>handwritten notes into findings</strong> &mdash; Word? Excel? Both? At what point do you type them up?</li>
-  <li>How do you decide <strong>severity</strong>? Do you set it in the moment, or revisit at the end of the day, or wait until report&#8209;writing?</li>
-  <li>After the on&#8209;rig week, <strong>how long until the report is delivered</strong>, and what does the report&#8209;writing schedule look like &mdash; full days, evenings around other work?</li>
-  <li>How do you actually <strong>build the report</strong>? Is there a master Word template you start from? How much do you copy or adapt from previous reports?</li>
-  <li>How do you <strong>lay out photo plates</strong> in Word? How do you annotate photos (arrows, circles, dimension lines)? What tool do you use for the annotation?</li>
-  <li>Do you have a <strong>peer reviewer</strong>, or does the report ship straight from you to the client?</li>
-  <li>How does the client take <strong>delivery</strong> &mdash; email PDF, USB drop&#8209;off, portal upload? Do they want an Excel defect register alongside the PDF? Do they want raw photos?</li>
-  <li>What's the <strong>longest</strong> part of report&#8209;writing? Where do you most often get stuck, bored, or have to redo work?</li>
-  <li>After delivery, how do you handle <strong>close&#8209;out</strong> &mdash; clients sending evidence that critical items have been fixed? Does the loop usually close, or do items drift?</li>
-</ul>
+<!-- Q16 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">16.</div>
+    <div class="q-text">Walk us through 19:00 to 23:00 on Day 3 of an average inspection.</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q16-text" placeholder="What you actually do in the evening before sleeping"></textarea>
+  </div>
+</div>
+
+<!-- Q17 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">17.</div>
+    <div class="q-text">How do you transfer, rename, and sort photos?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Transfer method</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q17t" data-tag="USB cable"><span>USB cable</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17t" data-tag="AirDrop"><span>AirDrop</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17t" data-tag="OneDrive auto-sync"><span>OneDrive sync</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17t" data-tag="iCloud / Google Photos"><span>iCloud / Google Photos</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17t" data-tag="Email to self"><span>Email to self</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17t" data-tag="SD card"><span>SD card</span></label>
+    </div>
+    <div class="chips-label">How you sort them</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q17s" data-tag="By day folder"><span>By day</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17s" data-tag="By system folder"><span>By system</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17s" data-tag="Renamed with finding ID"><span>By finding ID</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17s" data-tag="Date-only filename"><span>Date-only</span></label>
+      <label class="chip"><input type="checkbox" data-q="q17s" data-tag="Don't really sort"><span>Don't sort</span></label>
+    </div>
+    <textarea data-q="q17-text" placeholder="Roughly how long does the photo workflow take per day?"></textarea>
+  </div>
+</div>
+
+<!-- Q18 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">18.</div>
+    <div class="q-text">How do handwritten notes become findings?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q18" data-tag="Type into Word same evening"><span>Word same evening</span></label>
+      <label class="chip"><input type="checkbox" data-q="q18" data-tag="Type into Excel same evening"><span>Excel same evening</span></label>
+      <label class="chip"><input type="checkbox" data-q="q18" data-tag="Wait until after the inspection"><span>Wait until after</span></label>
+      <label class="chip"><input type="checkbox" data-q="q18" data-tag="Voice memo to self"><span>Voice memo</span></label>
+      <label class="chip"><input type="checkbox" data-q="q18" data-tag="Photo of notebook page"><span>Photo of page</span></label>
+      <label class="chip"><input type="checkbox" data-q="q18" data-tag="Notebook stays as-is until report writing"><span>Keep paper as-is</span></label>
+    </div>
+    <textarea data-q="q18-text" placeholder="How legible are your notes by Day 5?"></textarea>
+  </div>
+</div>
+
+<!-- Q19 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">19.</div>
+    <div class="q-text">When do you decide severity?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q19" data-q="q19" data-tag="In the moment at the finding"><span>In the moment</span></label>
+      <label class="chip"><input type="radio" name="q19" data-q="q19" data-tag="End of each day"><span>End of day</span></label>
+      <label class="chip"><input type="radio" name="q19" data-q="q19" data-tag="At report writing"><span>At report writing</span></label>
+      <label class="chip"><input type="radio" name="q19" data-q="q19" data-tag="Mixed — depends on item"><span>Mixed</span></label>
+    </div>
+    <textarea data-q="q19-text" placeholder="How often does severity drift between field and report?"></textarea>
+  </div>
+</div>
+
+<!-- Q20 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">20.</div>
+    <div class="q-text">Days from leaving the rig to delivering the report?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q20" data-q="q20" data-tag="Within 1 week"><span>≤ 1 week</span></label>
+      <label class="chip"><input type="radio" name="q20" data-q="q20" data-tag="1-2 weeks"><span>1&ndash;2 weeks</span></label>
+      <label class="chip"><input type="radio" name="q20" data-q="q20" data-tag="2-3 weeks"><span>2&ndash;3 weeks</span></label>
+      <label class="chip"><input type="radio" name="q20" data-q="q20" data-tag="3-4 weeks"><span>3&ndash;4 weeks</span></label>
+      <label class="chip"><input type="radio" name="q20" data-q="q20" data-tag="4+ weeks"><span>4+ weeks</span></label>
+    </div>
+    <textarea data-q="q20-text" placeholder="Full days at the laptop, or evenings around other work?"></textarea>
+  </div>
+</div>
+
+<!-- Q21 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">21.</div>
+    <div class="q-text">Master Word template, copy-prior-report, or start fresh each time?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q21" data-q="q21" data-tag="Master template, then customise"><span>Master template</span></label>
+      <label class="chip"><input type="radio" name="q21" data-q="q21" data-tag="Copy previous report, edit in place"><span>Copy previous report</span></label>
+      <label class="chip"><input type="radio" name="q21" data-q="q21" data-tag="Start fresh each time"><span>Start fresh</span></label>
+      <label class="chip"><input type="radio" name="q21" data-q="q21" data-tag="Client-supplied template"><span>Client template</span></label>
+    </div>
+    <textarea data-q="q21-text" placeholder="Roughly what % of the new report is recycled from the previous one?"></textarea>
+  </div>
+</div>
+
+<!-- Q22 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">22.</div>
+    <div class="q-text">Photo plates and annotation — what tools, how laid out?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Annotation tools</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="Word built-in shapes"><span>Word shapes</span></label>
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="PowerPoint"><span>PowerPoint</span></label>
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="Snipping Tool"><span>Snipping Tool</span></label>
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="Mac Preview"><span>Preview (Mac)</span></label>
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="Adobe Acrobat"><span>Acrobat</span></label>
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="Photoshop / Affinity"><span>Photoshop</span></label>
+      <label class="chip"><input type="checkbox" data-q="q22a" data-tag="Phone camera markup"><span>Phone markup</span></label>
+    </div>
+    <div class="chips-label">Plate layout</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q22l" data-q="q22l" data-tag="One photo per page"><span>1-up</span></label>
+      <label class="chip"><input type="radio" name="q22l" data-q="q22l" data-tag="Two-up"><span>2-up</span></label>
+      <label class="chip"><input type="radio" name="q22l" data-q="q22l" data-tag="Four-up"><span>4-up</span></label>
+      <label class="chip"><input type="radio" name="q22l" data-q="q22l" data-tag="Mixed depending on finding"><span>Mixed</span></label>
+    </div>
+    <textarea data-q="q22-text" placeholder="How painful is the layout step on a typical report?"></textarea>
+  </div>
+</div>
+
+<!-- Q23 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">23.</div>
+    <div class="q-text">Peer review before delivery?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q23" data-q="q23" data-tag="Always"><span>Always</span></label>
+      <label class="chip"><input type="radio" name="q23" data-q="q23" data-tag="Sometimes"><span>Sometimes</span></label>
+      <label class="chip"><input type="radio" name="q23" data-q="q23" data-tag="Never — solo"><span>Never</span></label>
+    </div>
+    <textarea data-q="q23-text" placeholder="If you do peer review, how does it work?"></textarea>
+  </div>
+</div>
+
+<!-- Q24 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">24.</div>
+    <div class="q-text">How does the client take delivery, and what do they ask for besides the PDF?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Delivery method</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q24d" data-tag="Email PDF"><span>Email PDF</span></label>
+      <label class="chip"><input type="checkbox" data-q="q24d" data-tag="WeTransfer / large-file link"><span>WeTransfer / link</span></label>
+      <label class="chip"><input type="checkbox" data-q="q24d" data-tag="Client portal upload"><span>Client portal</span></label>
+      <label class="chip"><input type="checkbox" data-q="q24d" data-tag="SharePoint / OneDrive share"><span>SharePoint</span></label>
+      <label class="chip"><input type="checkbox" data-q="q24d" data-tag="USB drop-off / courier"><span>USB / courier</span></label>
+    </div>
+    <div class="chips-label">Excel defect register asked for?</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q24e" data-q="q24e" data-tag="Always asked for Excel register"><span>Always</span></label>
+      <label class="chip"><input type="radio" name="q24e" data-q="q24e" data-tag="Sometimes asked for Excel register"><span>Sometimes</span></label>
+      <label class="chip"><input type="radio" name="q24e" data-q="q24e" data-tag="Never asked for Excel register"><span>Never</span></label>
+    </div>
+    <div class="chips-label">Raw photos?</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q24r" data-q="q24r" data-tag="Always asked for raw photos"><span>Always</span></label>
+      <label class="chip"><input type="radio" name="q24r" data-q="q24r" data-tag="Sometimes asked for raw photos"><span>Sometimes</span></label>
+      <label class="chip"><input type="radio" name="q24r" data-q="q24r" data-tag="Never asked for raw photos"><span>Never</span></label>
+    </div>
+    <textarea data-q="q24-text" placeholder="Any other format the client wants — slides, dashboard, summary letter?"></textarea>
+  </div>
+</div>
+
+<!-- Q25 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">25.</div>
+    <div class="q-text">Longest part of report writing? Where do you get most stuck?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Pick the worst 1&ndash;2</div>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Photo plate layout"><span>Photo plates</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Defect register table formatting"><span>Register table</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Executive summary writing"><span>Exec summary</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Per-discipline narrative"><span>Discipline narratives</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Photo annotation"><span>Photo annotation</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Cross-referencing photos to findings"><span>Photo → finding linkage</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Severity / consistency pass"><span>Severity pass</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="Clause citations"><span>Clause citations</span></label>
+      <label class="chip"><input type="checkbox" data-q="q25" data-tag="PDF assembly / compression"><span>PDF assembly</span></label>
+    </div>
+    <textarea data-q="q25-text" placeholder="What makes it hard?"></textarea>
+  </div>
+</div>
+
+<!-- Q26 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">26.</div>
+    <div class="q-text">After delivery, does the close-out loop actually close?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q26" data-q="q26" data-tag="Usually closes"><span>Usually closes</span></label>
+      <label class="chip"><input type="radio" name="q26" data-q="q26" data-tag="Often drifts"><span>Often drifts</span></label>
+      <label class="chip"><input type="radio" name="q26" data-q="q26" data-tag="Rarely closes formally"><span>Rarely closes</span></label>
+      <label class="chip"><input type="radio" name="q26" data-q="q26" data-tag="Not my job after delivery"><span>Not my responsibility</span></label>
+    </div>
+    <textarea data-q="q26-text" placeholder="How do clients send closure evidence?"></textarea>
+  </div>
+</div>
 
 <h2 id="s4">Section 4 &mdash; Specific tools and field reality <span class="section-time">~10 min</span></h2>
 
-<ul class="questions" style="--q-start: 26;">
-  <li>What's your <strong>daily phone</strong> right now? Has any operator ever asked you not to bring it onto the rig floor or into Zone 1?</li>
-  <li>Have you ever used an <strong>intrinsically&#8209;safe phone or tablet</strong> (Aegex, Getac F110&#8209;EX / ZX10&#8209;Ex, i.safe MOBILE, ecom Tab&#8209;Ex)? If so, what was it like to live with for a week?</li>
-  <li>What's <strong>connectivity</strong> like on a typical rig you visit &mdash; VSAT, 4G hotspot at the company&#8209;man's trailer, Starlink Maritime? Are you uploading anything from on board, or saving it all for after?</li>
-  <li>Do you wear <strong>gloves</strong> while logging findings on a phone or tablet? Which gloves? Do they actually work with the screen?</li>
-  <li>Have you ever <strong>lost work</strong> because of a dead battery, a dropped phone, a lost notebook, an OneDrive sync failure? What happened?</li>
-  <li>Do you use <strong>voice dictation</strong> today, or have you tried? At what noise level does it become useless?</li>
-  <li>What software (apps, Word, Excel, Adobe Acrobat, OneDrive, Dropbox) do you actually use during an inspection? Rough list.</li>
-</ul>
+<!-- Q27 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">27.</div>
+    <div class="q-text">Daily phone, and is it allowed on the rig floor?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q27a" data-q="q27a" data-tag="Allowed everywhere"><span>Allowed everywhere</span></label>
+      <label class="chip"><input type="radio" name="q27a" data-q="q27a" data-tag="Allowed on rig floor only sometimes"><span>Sometimes</span></label>
+      <label class="chip"><input type="radio" name="q27a" data-q="q27a" data-tag="Banned from rig floor / Zone 1"><span>Banned in Zone 1</span></label>
+    </div>
+    <textarea data-q="q27-text" placeholder="Phone model + any operator policy you've run into"></textarea>
+  </div>
+</div>
+
+<!-- Q28 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">28.</div>
+    <div class="q-text">Ever used an intrinsically-safe phone or tablet?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q28" data-tag="Aegex (Windows)"><span>Aegex</span></label>
+      <label class="chip"><input type="checkbox" data-q="q28" data-tag="Getac F110-EX / ZX10-Ex"><span>Getac</span></label>
+      <label class="chip"><input type="checkbox" data-q="q28" data-tag="i.safe MOBILE (Android)"><span>i.safe MOBILE</span></label>
+      <label class="chip"><input type="checkbox" data-q="q28" data-tag="ecom / Pepperl+Fuchs Tab-Ex"><span>ecom Tab-Ex</span></label>
+      <label class="chip"><input type="checkbox" data-q="q28" data-tag="Bartec Pixavi"><span>Bartec Pixavi</span></label>
+      <label class="chip"><input type="checkbox" data-q="q28" data-tag="Never used one"><span>Never used one</span></label>
+    </div>
+    <textarea data-q="q28-text" placeholder="What was it like to actually live with for a week?"></textarea>
+  </div>
+</div>
+
+<!-- Q29 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">29.</div>
+    <div class="q-text">Connectivity on a typical rig you visit?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q29" data-tag="VSAT"><span>VSAT</span></label>
+      <label class="chip"><input type="checkbox" data-q="q29" data-tag="Starlink Maritime / land"><span>Starlink</span></label>
+      <label class="chip"><input type="checkbox" data-q="q29" data-tag="4G/5G hotspot in company-man trailer"><span>4G hotspot</span></label>
+      <label class="chip"><input type="checkbox" data-q="q29" data-tag="Onshore cellular"><span>Onshore cellular</span></label>
+      <label class="chip"><input type="checkbox" data-q="q29" data-tag="Effectively none in working areas"><span>Effectively none</span></label>
+    </div>
+    <textarea data-q="q29-text" placeholder="Do you upload anything from on board, or save it all for the end?"></textarea>
+  </div>
+</div>
+
+<!-- Q30 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">30.</div>
+    <div class="q-text">Do gloves work on your phone or tablet screen?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q30" data-q="q30" data-tag="Yes, my gloves work"><span>Yes</span></label>
+      <label class="chip"><input type="radio" name="q30" data-q="q30" data-tag="Sometimes — depends on glove"><span>Sometimes</span></label>
+      <label class="chip"><input type="radio" name="q30" data-q="q30" data-tag="No — have to take gloves off"><span>No — gloves off</span></label>
+    </div>
+    <textarea data-q="q30-text" placeholder="Which gloves do you wear?"></textarea>
+  </div>
+</div>
+
+<!-- Q31 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">31.</div>
+    <div class="q-text">Have you ever lost work in the field?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q31" data-q="q31" data-tag="Yes — catastrophic loss"><span>Yes — catastrophic</span></label>
+      <label class="chip"><input type="radio" name="q31" data-q="q31" data-tag="Yes — minor loss"><span>Yes — minor</span></label>
+      <label class="chip"><input type="radio" name="q31" data-q="q31" data-tag="Close calls only"><span>Close calls</span></label>
+      <label class="chip"><input type="radio" name="q31" data-q="q31" data-tag="Never"><span>Never</span></label>
+    </div>
+    <textarea data-q="q31-text" placeholder="What happened, what did you do about it?"></textarea>
+  </div>
+</div>
+
+<!-- Q32 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">32.</div>
+    <div class="q-text">Voice dictation — used it in the field?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q32" data-q="q32" data-tag="Use regularly"><span>Use regularly</span></label>
+      <label class="chip"><input type="radio" name="q32" data-q="q32" data-tag="Tried, abandoned"><span>Tried, abandoned</span></label>
+      <label class="chip"><input type="radio" name="q32" data-q="q32" data-tag="Never tried"><span>Never tried</span></label>
+    </div>
+    <textarea data-q="q32-text" placeholder="At what noise level does it become useless?"></textarea>
+  </div>
+</div>
+
+<!-- Q33 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">33.</div>
+    <div class="q-text">Software you actually use during an inspection?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Microsoft Word"><span>Word</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Microsoft Excel"><span>Excel</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Adobe Acrobat"><span>Acrobat</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="OneDrive"><span>OneDrive</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="SharePoint"><span>SharePoint</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Dropbox"><span>Dropbox</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Google Drive / Docs"><span>Google Drive</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="WhatsApp"><span>WhatsApp</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Email client"><span>Email</span></label>
+      <label class="chip"><input type="checkbox" data-q="q33" data-tag="Camera roll only"><span>Camera roll only</span></label>
+    </div>
+    <textarea data-q="q33-text" placeholder="Anything else worth naming"></textarea>
+  </div>
+</div>
 
 <h2 id="s5">Section 5 &mdash; Severity, vocabulary, standards <span class="section-time">~10 min</span></h2>
 
-<ul class="questions" style="--q-start: 33;">
-  <li>Which <strong>severity scheme</strong> do you use most often &mdash; Critical / Major / Minor, A / B / C, 1&ndash;5 condition rating, 5&times;5 risk matrix? Does it vary by client?</li>
-  <li>Which <strong>standards</strong> do you cite most often in reports &mdash; API RP 4G, RP 8B, Std 53, Spec 16A, IADC checklist, OSHA 1910, BSEE 30 CFR 250, NORSOK, DNV, ABS, client&#8209;specific specs?</li>
-  <li>Are there clauses you <strong>wish you cited more often</strong> but skip because it's tedious to look up?</li>
-  <li>Do you keep a <strong>personal library of recommendation phrasings</strong> you re&#8209;use? Where does it live &mdash; a Word doc, scattered across previous reports, in your head?</li>
-  <li>What <strong>component&#8209;naming conventions</strong> do you stick to? Any standard component names you wish were just always pre&#8209;populated when you start an inspection (mast pins, BOP rams, crown sheaves, etc.)?</li>
-  <li>How do you handle <strong>NDT data</strong> today &mdash; your own measurements, or someone else's? Do they hand you a PDF you embed in the report, or raw readings you have to format?</li>
-  <li>What inspection <strong>categories</strong> (API RP 4G Cat III/IV, API RP 8B Cat I&ndash;IV) do you most often scope into?</li>
-</ul>
+<!-- Q34 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">34.</div>
+    <div class="q-text">Which severity scheme do you use most?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="Critical / Major / Minor / Observation"><span>Critical / Major / Minor / Obs</span></label>
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="A / B / C categorisation"><span>A / B / C</span></label>
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="1-5 condition rating"><span>1&ndash;5 rating</span></label>
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="5x5 risk matrix"><span>5&times;5 risk matrix</span></label>
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="RAG (Red / Amber / Green)"><span>RAG</span></label>
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="DROPS bands"><span>DROPS bands</span></label>
+      <label class="chip"><input type="checkbox" data-q="q34" data-tag="OSHA-IADC SAT/UNS/CDI/DSB"><span>OSHA-IADC SAT/UNS/CDI</span></label>
+    </div>
+    <textarea data-q="q34-text" placeholder="Does it vary by client? If yes, which clients want what?"></textarea>
+  </div>
+</div>
+
+<!-- Q35 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">35.</div>
+    <div class="q-text">Standards you cite most often in reports?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="API RP 4G"><span>API RP 4G</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="API RP 8B"><span>API RP 8B</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="API Std 53"><span>API Std 53</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="API Spec 16A/C/D"><span>API 16A/C/D</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="API Spec 7K / RP 7L"><span>API 7K/7L</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="API RP 54"><span>API RP 54</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="IADC checklist"><span>IADC checklist</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="OSHA 1910 / 1926"><span>OSHA 1910/1926</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="BSEE 30 CFR 250"><span>BSEE 30 CFR 250</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="NORSOK D-010 / D-001"><span>NORSOK</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="DNV-OS-E101"><span>DNV</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="ABS MODU / CDS"><span>ABS</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="Client-specific spec"><span>Client-specific</span></label>
+      <label class="chip"><input type="checkbox" data-q="q35" data-tag="ASNT SNT-TC-1A (NDT)"><span>ASNT</span></label>
+    </div>
+    <textarea data-q="q35-text" placeholder="Anything else you cite regularly"></textarea>
+  </div>
+</div>
+
+<!-- Q36 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">36.</div>
+    <div class="q-text">Clauses you wish you cited more often but skip because it's tedious?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q36-text" placeholder="Free text"></textarea>
+  </div>
+</div>
+
+<!-- Q37 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">37.</div>
+    <div class="q-text">Personal library of recommendation phrasings — where does it live?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q37" data-q="q37" data-tag="Organised Word / Excel file"><span>Organised file</span></label>
+      <label class="chip"><input type="radio" name="q37" data-q="q37" data-tag="Scattered across previous reports"><span>Scattered across prior reports</span></label>
+      <label class="chip"><input type="radio" name="q37" data-q="q37" data-tag="In my head"><span>In my head</span></label>
+      <label class="chip"><input type="radio" name="q37" data-q="q37" data-tag="No personal library"><span>None</span></label>
+    </div>
+    <textarea data-q="q37-text" placeholder="Would you share a copy?"></textarea>
+  </div>
+</div>
+
+<!-- Q38 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">38.</div>
+    <div class="q-text">Component naming conventions you stick to?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q38-text" placeholder="e.g. 'top drive' vs 'TDS'; mast vs derrick. Any component names you wish were always pre-populated."></textarea>
+  </div>
+</div>
+
+<!-- Q39 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">39.</div>
+    <div class="q-text">NDT data — yours or someone else's?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q39" data-q="q39" data-tag="I perform NDT myself"><span>I perform</span></label>
+      <label class="chip"><input type="radio" name="q39" data-q="q39" data-tag="NDT tech hands me a PDF I embed"><span>Tech hands me a PDF</span></label>
+      <label class="chip"><input type="radio" name="q39" data-q="q39" data-tag="NDT tech hands me raw readings I format"><span>Tech hands me raw data</span></label>
+      <label class="chip"><input type="radio" name="q39" data-q="q39" data-tag="Both depending on scope"><span>Both</span></label>
+      <label class="chip"><input type="radio" name="q39" data-q="q39" data-tag="No NDT in my scope"><span>Not in my scope</span></label>
+    </div>
+    <textarea data-q="q39-text" placeholder="Which NDT methods come up most (UT thickness, MPI, PT…)?"></textarea>
+  </div>
+</div>
+
+<!-- Q40 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">40.</div>
+    <div class="q-text">Inspection categories you most often scope into?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 4G Cat I"><span>4G Cat I</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 4G Cat II"><span>4G Cat II</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 4G Cat III"><span>4G Cat III</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 4G Cat IV"><span>4G Cat IV</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 8B Cat I-II"><span>8B I/II</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 8B Cat III"><span>8B III</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="API RP 8B Cat IV"><span>8B IV</span></label>
+      <label class="chip"><input type="checkbox" data-q="q40" data-tag="DROPS aloft survey"><span>DROPS aloft</span></label>
+    </div>
+    <textarea data-q="q40-text" placeholder="Anything else worth naming"></textarea>
+  </div>
+</div>
 
 <h2 id="s6">Section 6 &mdash; Mistakes, disputes, defensibility <span class="section-time">~10 min</span></h2>
 
-<ul class="questions" style="--q-start: 40;">
-  <li>What's the <strong>worst report mistake</strong> you've ever made or seen &mdash; wrong photo on a finding, severity downgrade you regretted, missing critical item, stale text from a previous report? What was the root cause?</li>
-  <li>Have you ever had a finding <strong>disputed by a client</strong> and overturned at exit meeting? How was that resolved? Was there a written dispensation?</li>
-  <li>Have you ever had a finding <strong>come back to bite you</strong> months later &mdash; regulator finding, incident on that rig, insurance dispute?</li>
-  <li>What's the one thing that, <strong>if it failed in the field</strong>, would make you abandon a software tool and reach for your notebook?</li>
-  <li>What do you wish a report had that you currently can't put in it because it's too tedious &mdash; historical comparison with last inspection, capex backlog roll&#8209;up, regulatory clause map, something else?</li>
-</ul>
+<!-- Q41 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">41.</div>
+    <div class="q-text">Worst report mistake you've ever made or seen — and the root cause?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q41-text" placeholder="Free text — anonymised is fine"></textarea>
+  </div>
+</div>
+
+<!-- Q42 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">42.</div>
+    <div class="q-text">Finding ever disputed by a client and overturned at exit meeting?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q42" data-q="q42" data-tag="Yes, multiple times"><span>Multiple times</span></label>
+      <label class="chip"><input type="radio" name="q42" data-q="q42" data-tag="Yes, once or twice"><span>Once or twice</span></label>
+      <label class="chip"><input type="radio" name="q42" data-q="q42" data-tag="Never"><span>Never</span></label>
+    </div>
+    <textarea data-q="q42-text" placeholder="How was it resolved? Was there a written dispensation?"></textarea>
+  </div>
+</div>
+
+<!-- Q43 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">43.</div>
+    <div class="q-text">Has a finding ever come back to bite you months later (regulator finding, incident, insurance)?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q43" data-q="q43" data-tag="Yes"><span>Yes</span></label>
+      <label class="chip"><input type="radio" name="q43" data-q="q43" data-tag="Not directly, but close"><span>Close call</span></label>
+      <label class="chip"><input type="radio" name="q43" data-q="q43" data-tag="Never"><span>Never</span></label>
+    </div>
+    <textarea data-q="q43-text" placeholder="Free text"></textarea>
+  </div>
+</div>
+
+<!-- Q44 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">44.</div>
+    <div class="q-text">What single thing, if it failed in the field, would make you abandon a software tool?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Photo loss"><span>Photo loss</span></label>
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Sync loss / data overwrite"><span>Sync overwrite</span></label>
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Crash mid-finding"><span>Crashes</span></label>
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Slow launch / unresponsive UI"><span>Slow / unresponsive</span></label>
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Ugly PDF output"><span>Bad PDF</span></label>
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Vendor lock-in / can't export"><span>Can't export data</span></label>
+      <label class="chip"><input type="checkbox" data-q="q44" data-tag="Doesn't work offline"><span>No offline</span></label>
+    </div>
+    <textarea data-q="q44-text" placeholder="Anything specific you've seen kill another tool"></textarea>
+  </div>
+</div>
+
+<!-- Q45 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">45.</div>
+    <div class="q-text">What do you wish a report had that you currently can't put in because it's too tedious?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q45" data-tag="Historical comparison vs last inspection"><span>Historical comparison</span></label>
+      <label class="chip"><input type="checkbox" data-q="q45" data-tag="Capex backlog roll-up"><span>Capex backlog roll-up</span></label>
+      <label class="chip"><input type="checkbox" data-q="q45" data-tag="Regulatory clause map"><span>Clause map</span></label>
+      <label class="chip"><input type="checkbox" data-q="q45" data-tag="Trend graphs across inspections"><span>Trend graphs</span></label>
+      <label class="chip"><input type="checkbox" data-q="q45" data-tag="Better annotated photo plates"><span>Better photo plates</span></label>
+      <label class="chip"><input type="checkbox" data-q="q45" data-tag="Inline NDT readings tables"><span>NDT readings inline</span></label>
+    </div>
+    <textarea data-q="q45-text" placeholder="Free text"></textarea>
+  </div>
+</div>
 
 <h2 id="s7">Section 7 &mdash; Money, adoption, your network <span class="section-time">~10 min</span></h2>
 
-<ul class="questions" style="--q-start: 45;">
-  <li>What <strong>software do you currently pay for</strong> out of pocket (Adobe Acrobat Pro, Microsoft 365, OneDrive, anything else)? Rough monthly cost?</li>
-  <li>Have you ever paid for an <strong>inspection tool</strong> &mdash; SafetyCulture / iAuditor, FAT FINGER, BasinCheck, Floodlight, ModuSpec Argus, GoCanvas, Fulcrum, anything else? What did you think? Why did you stop, if you did?</li>
-  <li>If a tool genuinely saved you <strong>20&ndash;40 hours per inspection</strong> and produced a PDF at least as good as your current Word output, what would you pay per month for it? At what price would you start hesitating?</li>
-  <li>Would you rather pay <strong>per inspection or flat monthly subscription</strong>? Annual or month&#8209;to&#8209;month?</li>
-  <li>How many <strong>other inspectors</strong> are in your immediate network who might also use a tool like this? Any specific people you'd recommend we speak to?</li>
-  <li>Would you be willing to <strong>dogfood the first version</strong> on one of your real inspections &mdash; paper still in your bag as a safety net?</li>
-  <li>Could we <strong>shadow one of your inspections</strong> in the next 3&ndash;6 months, even remotely (you carry a second device, we watch over your shoulder)?</li>
-</ul>
+<!-- Q46 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">46.</div>
+    <div class="q-text">Software you currently pay for out of pocket?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q46" data-tag="Microsoft 365"><span>Microsoft 365</span></label>
+      <label class="chip"><input type="checkbox" data-q="q46" data-tag="Adobe Acrobat Pro"><span>Acrobat Pro</span></label>
+      <label class="chip"><input type="checkbox" data-q="q46" data-tag="OneDrive / Dropbox / iCloud paid"><span>Cloud storage</span></label>
+      <label class="chip"><input type="checkbox" data-q="q46" data-tag="Google Workspace"><span>Google Workspace</span></label>
+      <label class="chip"><input type="checkbox" data-q="q46" data-tag="A note-taking app (Notion, Evernote, OneNote)"><span>Note-taking app</span></label>
+      <label class="chip"><input type="checkbox" data-q="q46" data-tag="A VPN"><span>VPN</span></label>
+    </div>
+    <textarea data-q="q46-text" placeholder="Rough monthly out-of-pocket total"></textarea>
+  </div>
+</div>
+
+<!-- Q47 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">47.</div>
+    <div class="q-text">Ever paid for an inspection tool?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="SafetyCulture / iAuditor"><span>SafetyCulture</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="GoCanvas"><span>GoCanvas</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="Fulcrum"><span>Fulcrum</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="TrueContext / ProntoForms"><span>TrueContext</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="FAT FINGER"><span>FAT FINGER</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="BasinCheck"><span>BasinCheck</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="ModuSpec Argus"><span>ModuSpec Argus</span></label>
+      <label class="chip"><input type="checkbox" data-q="q47" data-tag="Never paid for any"><span>Never</span></label>
+    </div>
+    <textarea data-q="q47-text" placeholder="What did you think? Why did you stop, if you did?"></textarea>
+  </div>
+</div>
+
+<!-- Q48 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">48.</div>
+    <div class="q-text">If a tool saved you 20&ndash;40 hours per inspection and produced a PDF at least as good as your current Word output, what would you pay per month?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Comfortable price</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q48a" data-q="q48a" data-tag="< $50 / month comfortable"><span>&lt; $50</span></label>
+      <label class="chip"><input type="radio" name="q48a" data-q="q48a" data-tag="$50-100 / month comfortable"><span>$50&ndash;100</span></label>
+      <label class="chip"><input type="radio" name="q48a" data-q="q48a" data-tag="$100-200 / month comfortable"><span>$100&ndash;200</span></label>
+      <label class="chip"><input type="radio" name="q48a" data-q="q48a" data-tag="$200-500 / month comfortable"><span>$200&ndash;500</span></label>
+      <label class="chip"><input type="radio" name="q48a" data-q="q48a" data-tag="$500+ / month comfortable"><span>$500+</span></label>
+    </div>
+    <div class="chips-label">Hesitation point</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q48b" data-q="q48b" data-tag="Hesitate above $100"><span>&gt; $100</span></label>
+      <label class="chip"><input type="radio" name="q48b" data-q="q48b" data-tag="Hesitate above $200"><span>&gt; $200</span></label>
+      <label class="chip"><input type="radio" name="q48b" data-q="q48b" data-tag="Hesitate above $500"><span>&gt; $500</span></label>
+      <label class="chip"><input type="radio" name="q48b" data-q="q48b" data-tag="Hesitate above $1000"><span>&gt; $1,000</span></label>
+    </div>
+    <textarea data-q="q48-text" placeholder="Anything about pricing model that matters to you"></textarea>
+  </div>
+</div>
+
+<!-- Q49 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">49.</div>
+    <div class="q-text">Preferred billing structure?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips-label">Per inspection vs subscription</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q49a" data-q="q49a" data-tag="Pay per inspection"><span>Per inspection</span></label>
+      <label class="chip"><input type="radio" name="q49a" data-q="q49a" data-tag="Flat monthly subscription"><span>Flat monthly</span></label>
+      <label class="chip"><input type="radio" name="q49a" data-q="q49a" data-tag="Either is fine"><span>Either</span></label>
+    </div>
+    <div class="chips-label">Monthly vs annual</div>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q49b" data-q="q49b" data-tag="Month-to-month"><span>Month-to-month</span></label>
+      <label class="chip"><input type="radio" name="q49b" data-q="q49b" data-tag="Annual prepay (with discount)"><span>Annual</span></label>
+      <label class="chip"><input type="radio" name="q49b" data-q="q49b" data-tag="No preference"><span>No preference</span></label>
+    </div>
+    <textarea data-q="q49-text" placeholder="Anything else"></textarea>
+  </div>
+</div>
+
+<!-- Q50 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">50.</div>
+    <div class="q-text">How many other inspectors in your network might also use this?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q50" data-q="q50" data-tag="0"><span>0</span></label>
+      <label class="chip"><input type="radio" name="q50" data-q="q50" data-tag="1-3"><span>1&ndash;3</span></label>
+      <label class="chip"><input type="radio" name="q50" data-q="q50" data-tag="4-10"><span>4&ndash;10</span></label>
+      <label class="chip"><input type="radio" name="q50" data-q="q50" data-tag="10-25"><span>10&ndash;25</span></label>
+      <label class="chip"><input type="radio" name="q50" data-q="q50" data-tag="25+"><span>25+</span></label>
+    </div>
+    <textarea data-q="q50-text" placeholder="Anyone specific you'd recommend we speak to"></textarea>
+  </div>
+</div>
+
+<!-- Q51 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">51.</div>
+    <div class="q-text">Willing to dogfood v1 on a real inspection (paper still in your bag as safety net)?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q51" data-q="q51" data-tag="Yes"><span>Yes</span></label>
+      <label class="chip"><input type="radio" name="q51" data-q="q51" data-tag="Maybe — depends"><span>Maybe</span></label>
+      <label class="chip"><input type="radio" name="q51" data-q="q51" data-tag="No"><span>No</span></label>
+    </div>
+    <textarea data-q="q51-text" placeholder="What would need to be true for you to say yes?"></textarea>
+  </div>
+</div>
+
+<!-- Q52 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">52.</div>
+    <div class="q-text">Could we shadow one of your inspections in the next 3&ndash;6 months (even remotely)?</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q52" data-q="q52" data-tag="Yes"><span>Yes</span></label>
+      <label class="chip"><input type="radio" name="q52" data-q="q52" data-tag="Maybe"><span>Maybe</span></label>
+      <label class="chip"><input type="radio" name="q52" data-q="q52" data-tag="No"><span>No</span></label>
+    </div>
+    <textarea data-q="q52-text" placeholder="If yes, when's a good first one?"></textarea>
+  </div>
+</div>
 
 <h2 id="s8">Section 8 &mdash; Show and tell <span class="section-time">5 min, ongoing</span></h2>
 
-<p class="section-intro">If you're willing, the single most valuable thing you can share is real artifacts. Nothing needs to leave our build team. We will redact any client&#8209;identifying details before anything enters an internal document.</p>
+<p class="section-intro">Real artifacts teach us more than any answer. Nothing leaves our build team, and we redact before anything enters internal docs.</p>
 
-<ul class="questions" style="--q-start: 52;">
-  <li><strong>A recent report (PDF)</strong> &mdash; even with all names and logos blacked out, the structure, length, and language tell us a lot.</li>
-  <li><strong>Your current Word template</strong> &mdash; the bones we'd be matching for visual parity in our PDF render.</li>
-  <li><strong>Your personal snippets file</strong>, if you have one, for recommendation phrasings.</li>
-  <li><strong>A screenshot of your folder structure</strong> on OneDrive / laptop / phone for a single inspection &mdash; how you organise photos and notes today.</li>
-  <li><strong>The format of an Excel defect register</strong> a client has asked you to deliver &mdash; column headers and one or two example rows is plenty.</li>
-  <li><strong>A copy of an inspection SOW</strong> you've signed (redacted), so we can understand how scope is framed.</li>
-</ul>
+<!-- Q53 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">53.</div>
+    <div class="q-text">A recent report (PDF), names and logos redacted is fine</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q53" data-q="q53" data-tag="Will share"><span>Will share</span></label>
+      <label class="chip"><input type="radio" name="q53" data-q="q53" data-tag="Will share redacted"><span>Will share redacted</span></label>
+      <label class="chip"><input type="radio" name="q53" data-q="q53" data-tag="Can't share"><span>Can't share</span></label>
+    </div>
+    <textarea data-q="q53-text"></textarea>
+  </div>
+</div>
+
+<!-- Q54 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">54.</div>
+    <div class="q-text">Your current Word template</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q54" data-q="q54" data-tag="Will share"><span>Will share</span></label>
+      <label class="chip"><input type="radio" name="q54" data-q="q54" data-tag="Will share redacted"><span>Will share redacted</span></label>
+      <label class="chip"><input type="radio" name="q54" data-q="q54" data-tag="Can't share"><span>Can't share</span></label>
+    </div>
+    <textarea data-q="q54-text"></textarea>
+  </div>
+</div>
+
+<!-- Q55 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">55.</div>
+    <div class="q-text">Your personal snippets file for recommendation phrasings</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q55" data-q="q55" data-tag="Will share"><span>Will share</span></label>
+      <label class="chip"><input type="radio" name="q55" data-q="q55" data-tag="Don't have one"><span>Don't have one</span></label>
+      <label class="chip"><input type="radio" name="q55" data-q="q55" data-tag="Can't share"><span>Can't share</span></label>
+    </div>
+    <textarea data-q="q55-text"></textarea>
+  </div>
+</div>
+
+<!-- Q56 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">56.</div>
+    <div class="q-text">A screenshot of your folder structure for a single inspection</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q56" data-q="q56" data-tag="Will share"><span>Will share</span></label>
+      <label class="chip"><input type="radio" name="q56" data-q="q56" data-tag="Can't share"><span>Can't share</span></label>
+    </div>
+    <textarea data-q="q56-text"></textarea>
+  </div>
+</div>
+
+<!-- Q57 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">57.</div>
+    <div class="q-text">Format of an Excel defect register a client has asked you for</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q57" data-q="q57" data-tag="Will share"><span>Will share</span></label>
+      <label class="chip"><input type="radio" name="q57" data-q="q57" data-tag="Will share redacted"><span>Will share redacted</span></label>
+      <label class="chip"><input type="radio" name="q57" data-q="q57" data-tag="Can't share"><span>Can't share</span></label>
+    </div>
+    <textarea data-q="q57-text" placeholder="Just column headers + a couple of example rows is plenty"></textarea>
+  </div>
+</div>
+
+<!-- Q58 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">58.</div>
+    <div class="q-text">A redacted SOW so we can understand how scope is framed</div>
+  </div>
+  <div class="q-body">
+    <div class="chips">
+      <label class="chip"><input type="radio" name="q58" data-q="q58" data-tag="Will share"><span>Will share</span></label>
+      <label class="chip"><input type="radio" name="q58" data-q="q58" data-tag="Will share redacted"><span>Will share redacted</span></label>
+      <label class="chip"><input type="radio" name="q58" data-q="q58" data-tag="Can't share"><span>Can't share</span></label>
+    </div>
+    <textarea data-q="q58-text"></textarea>
+  </div>
+</div>
 
 <h2 id="closing">Closing</h2>
 
-<ul class="questions" style="--q-start: 58;">
-  <li>What did we <strong>not ask</strong> that we should have?</li>
-  <li><strong>If we built only one thing</strong>, what's the single feature that would make you adopt this tool on your next inspection?</li>
-</ul>
+<!-- Q59 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">59.</div>
+    <div class="q-text">What did we not ask that we should have?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q59-text" placeholder="Free text"></textarea>
+  </div>
+</div>
+
+<!-- Q60 -->
+<div class="question">
+  <div class="q-prompt">
+    <div class="q-num">60.</div>
+    <div class="q-text">If we built only one thing, what would make you adopt this tool on your next inspection?</div>
+  </div>
+  <div class="q-body">
+    <textarea data-q="q60-text" placeholder="Free text"></textarea>
+  </div>
+</div>
+
+</form>
 
 <div class="closing">
-  <p>Thanks again. We'll send a written summary of what we change in the spec because of this conversation. If you have follow&#8209;up thoughts after the call, even days later, send them anytime &mdash; they're equally welcome.</p>
+  <h3>Send it back</h3>
+  <p>When you're done, use the buttons at the bottom: <strong>Download</strong> saves your answers as a Markdown file you can attach to email, <strong>Email back</strong> opens your mail client with the answers in the body. Your answers stay saved in this browser until you clear them or use a different device.</p>
+  <p>Thanks again. We'll send a written summary of what we change in the spec because of this conversation.</p>
 </div>
 
 </main>
 
-<footer class="doc-footer">
+<footer class="doc-footer" style="max-width:720px;margin:0 auto;padding:32px 24px 64px;color:var(--ink-faint);font-size:13px;border-top:1px solid var(--rule);">
   <p>Inspector Interview &middot; v1 &middot; Shared in confidence.</p>
 </footer>
+
+<div class="actionbar">
+  <div class="actionbar-inner">
+    <div class="progress">
+      <span id="progressText">0 of 60 answered</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
+    </div>
+    <div class="actionbar-actions">
+      <button class="btn btn-ghost" id="clearBtn">Clear</button>
+      <button class="btn" id="downloadBtn">Download</button>
+      <button class="btn btn-primary" id="emailBtn">Email back</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="clearModal">
+  <div class="modal">
+    <h3>Clear all your answers?</h3>
+    <p>This will permanently delete everything you've typed in this browser. There's no undo.</p>
+    <div class="modal-actions">
+      <button class="btn" id="cancelClear">Cancel</button>
+      <button class="btn btn-primary" id="confirmClear" style="background:#a02020;border-color:#a02020;">Clear all</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="emailModal">
+  <div class="modal">
+    <h3>Email back</h3>
+    <p>What's the founder's email address? We'll open your mail client with your answers pre-filled in the body.</p>
+    <input type="email" id="emailToInput" placeholder="founder@example.com" style="width:100%;padding:10px 12px;border:1px solid var(--rule-strong);border-radius:6px;font:inherit;font-size:15px;margin-top:8px;">
+    <p style="font-size:12px;color:var(--ink-faint);margin-top:10px;">If your answers are very long, your mail client may truncate them. The Download option is more reliable for long responses.</p>
+    <div class="modal-actions">
+      <button class="btn" id="cancelEmail">Cancel</button>
+      <button class="btn btn-primary" id="confirmEmail">Open mail client</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'rig-interview-answers-v1';
+  const SAVE_INDICATOR = document.getElementById('saveIndicator');
+  const PROGRESS_TEXT = document.getElementById('progressText');
+  const PROGRESS_FILL = document.getElementById('progressFill');
+  const TOTAL_QUESTIONS = 60;
+
+  // Build question → element map
+  const state = loadState();
+
+  // Question text lookup, for export
+  const QUESTION_LOOKUP = {};
+  document.querySelectorAll('.question').forEach(q => {
+    const num = q.querySelector('.q-num').textContent.replace('.', '').trim();
+    const text = q.querySelector('.q-text').textContent.trim();
+    QUESTION_LOOKUP[num] = text;
+  });
+
+  // Restore state to inputs
+  function restoreState() {
+    document.querySelectorAll('input[type=checkbox][data-q]').forEach(input => {
+      const q = input.dataset.q;
+      const tag = input.dataset.tag;
+      if (state[q] && Array.isArray(state[q]) && state[q].includes(tag)) {
+        input.checked = true;
+      }
+    });
+    document.querySelectorAll('input[type=radio][data-q]').forEach(input => {
+      const q = input.dataset.q;
+      const tag = input.dataset.tag;
+      if (state[q] === tag) {
+        input.checked = true;
+      }
+    });
+    document.querySelectorAll('textarea[data-q]').forEach(ta => {
+      const q = ta.dataset.q;
+      if (state[q]) {
+        ta.value = state[q];
+      }
+    });
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      flashSaved();
+    } catch (e) {
+      // localStorage may be full / disabled in private mode
+      SAVE_INDICATOR.textContent = 'Save failed — please copy your answers';
+      SAVE_INDICATOR.style.color = '#a02020';
+    }
+  }
+
+  let flashTimer = null;
+  function flashSaved() {
+    SAVE_INDICATOR.textContent = 'Saved';
+    SAVE_INDICATOR.classList.add('flash');
+    if (flashTimer) clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => {
+      SAVE_INDICATOR.textContent = 'Your answers save automatically';
+      SAVE_INDICATOR.classList.remove('flash');
+    }, 1500);
+  }
+
+  function updateProgress() {
+    const questionsAnswered = new Set();
+
+    document.querySelectorAll('input[type=checkbox][data-q]:checked, input[type=radio][data-q]:checked').forEach(input => {
+      const baseQ = input.dataset.q.replace(/[a-z]+$/, '').replace(/^q/, '');
+      questionsAnswered.add(baseQ.match(/^\d+/)[0]);
+    });
+    document.querySelectorAll('textarea[data-q]').forEach(ta => {
+      if (ta.value.trim().length > 0) {
+        const baseQ = ta.dataset.q.replace(/-text$/, '').replace(/^q/, '');
+        questionsAnswered.add(baseQ.match(/^\d+/)[0]);
+      }
+    });
+
+    const count = questionsAnswered.size;
+    const pct = Math.round((count / TOTAL_QUESTIONS) * 100);
+    PROGRESS_TEXT.textContent = count + ' of ' + TOTAL_QUESTIONS + ' answered';
+    PROGRESS_FILL.style.width = pct + '%';
+  }
+
+  // Wire change handlers
+  document.querySelectorAll('input[type=checkbox][data-q]').forEach(input => {
+    input.addEventListener('change', () => {
+      const q = input.dataset.q;
+      const tag = input.dataset.tag;
+      if (!state[q] || !Array.isArray(state[q])) state[q] = [];
+      if (input.checked) {
+        if (!state[q].includes(tag)) state[q].push(tag);
+      } else {
+        state[q] = state[q].filter(t => t !== tag);
+        if (state[q].length === 0) delete state[q];
+      }
+      saveState();
+      updateProgress();
+    });
+  });
+
+  document.querySelectorAll('input[type=radio][data-q]').forEach(input => {
+    input.addEventListener('change', () => {
+      const q = input.dataset.q;
+      const tag = input.dataset.tag;
+      if (input.checked) {
+        state[q] = tag;
+      }
+      saveState();
+      updateProgress();
+    });
+  });
+
+  let textareaTimer = null;
+  document.querySelectorAll('textarea[data-q]').forEach(ta => {
+    ta.addEventListener('input', () => {
+      const q = ta.dataset.q;
+      const value = ta.value.trim();
+      if (value.length > 0) {
+        state[q] = ta.value;
+      } else {
+        delete state[q];
+      }
+      // Debounce save for textareas
+      if (textareaTimer) clearTimeout(textareaTimer);
+      textareaTimer = setTimeout(() => {
+        saveState();
+        updateProgress();
+      }, 400);
+    });
+  });
+
+  // Build markdown export
+  function buildExport() {
+    const lines = [];
+    lines.push('# Inspector Interview — Responses');
+    lines.push('');
+    lines.push('_Submitted: ' + new Date().toLocaleString() + '_');
+    lines.push('');
+
+    // Group by question number
+    const questions = {};
+    Object.keys(state).forEach(key => {
+      const match = key.match(/^q(\d+)([a-z]*)(-text)?$/);
+      if (!match) return;
+      const num = match[1];
+      if (!questions[num]) questions[num] = { chips: {}, text: '' };
+      if (key.endsWith('-text')) {
+        questions[num].text = state[key];
+      } else {
+        const subkey = match[2] || 'main';
+        questions[num].chips[subkey] = state[key];
+      }
+    });
+
+    // Walk in order
+    const sortedNums = Object.keys(questions).sort((a, b) => parseInt(a) - parseInt(b));
+    sortedNums.forEach(num => {
+      const q = questions[num];
+      const promptText = QUESTION_LOOKUP[num] || '';
+      lines.push('## Q' + num + '. ' + promptText);
+      lines.push('');
+
+      Object.keys(q.chips).forEach(subkey => {
+        const val = q.chips[subkey];
+        if (Array.isArray(val)) {
+          if (val.length > 0) {
+            lines.push('**Selected:** ' + val.join(', '));
+          }
+        } else if (val) {
+          lines.push('**Answer:** ' + val);
+        }
+      });
+
+      if (q.text && q.text.trim()) {
+        if (Object.keys(q.chips).length > 0) lines.push('');
+        lines.push(q.text.trim());
+      }
+
+      lines.push('');
+    });
+
+    if (sortedNums.length === 0) {
+      lines.push('_No answers recorded yet._');
+    }
+
+    return lines.join('\n');
+  }
+
+  // Download
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const md = buildExport();
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().split('T')[0];
+    a.href = url;
+    a.download = 'inspector-interview-' + stamp + '.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // Email modal
+  const emailModal = document.getElementById('emailModal');
+  const emailToInput = document.getElementById('emailToInput');
+  document.getElementById('emailBtn').addEventListener('click', () => {
+    emailModal.classList.add('open');
+    setTimeout(() => emailToInput.focus(), 50);
+  });
+  document.getElementById('cancelEmail').addEventListener('click', () => {
+    emailModal.classList.remove('open');
+  });
+  document.getElementById('confirmEmail').addEventListener('click', () => {
+    const to = emailToInput.value.trim();
+    if (!to) return;
+    const md = buildExport();
+    const subject = 'Inspector Interview — my responses';
+    const mailto = 'mailto:' + encodeURIComponent(to) +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(md);
+    // Some mail clients limit URL length; fall back to download with a notice
+    if (mailto.length > 1800) {
+      if (confirm('Your answers are quite long and may be truncated by your mail client. Download the file instead?')) {
+        document.getElementById('downloadBtn').click();
+        emailModal.classList.remove('open');
+        return;
+      }
+    }
+    window.location.href = mailto;
+    emailModal.classList.remove('open');
+  });
+
+  // Clear modal
+  const clearModal = document.getElementById('clearModal');
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    clearModal.classList.add('open');
+  });
+  document.getElementById('cancelClear').addEventListener('click', () => {
+    clearModal.classList.remove('open');
+  });
+  document.getElementById('confirmClear').addEventListener('click', () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
+    location.reload();
+  });
+
+  // Close modals on backdrop click
+  [emailModal, clearModal].forEach(m => {
+    m.addEventListener('click', (e) => {
+      if (e.target === m) m.classList.remove('open');
+    });
+  });
+
+  // Initial restore + progress
+  restoreState();
+  updateProgress();
+})();
+</script>
 
 </body>
 </html>
